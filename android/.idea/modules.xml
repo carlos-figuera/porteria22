@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/558569716/android.eyro_toast.iml" filepath="$PROJECT_DIR$/.idea/modules/558569716/android.eyro_toast.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-273962524/android.flutter_plugin_android_lifecycle.iml" filepath="$PROJECT_DIR$/.idea/modules/-273962524/android.flutter_plugin_android_lifecycle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1825929138/android.image_picker.iml" filepath="$PROJECT_DIR$/.idea/modules/1825929138/android.image_picker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1175326480/android.path_provider.iml" filepath="$PROJECT_DIR$/.idea/modules/1175326480/android.path_provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/535207910/android.qr_code_scanner.iml" filepath="$PROJECT_DIR$/.idea/modules/535207910/android.qr_code_scanner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/287550685/android.shared_preferences.iml" filepath="$PROJECT_DIR$/.idea/modules/287550685/android.shared_preferences.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1784142606/android.sqflite.iml" filepath="$PROJECT_DIR$/.idea/modules/1784142606/android.sqflite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1274576561/android.vibration.iml" filepath="$PROJECT_DIR$/.idea/modules/1274576561/android.vibration.iml" />
+    </modules>
+  </component>
+</project>
