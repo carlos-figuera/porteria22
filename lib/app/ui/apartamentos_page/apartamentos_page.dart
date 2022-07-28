@@ -125,13 +125,14 @@ class _ApartamentosPageState extends State<ApartamentosPage>
   Widget buscardorh() {
     return Container(
         color: Colors.white,
-        child: SearchField(
-          suggestions: listaApartamentosS,
+        child: SearchField (
+          suggestions: listaApartamentosS ,
           hint: 'Selecciona un apartamento',
           searchStyle: TextStyle(
             fontSize: 14,
             color: Colors.black.withOpacity(0.8),
           ),
+
           validator: (x) {
             if (x.length == 0) {
               _curretApartamento = null;

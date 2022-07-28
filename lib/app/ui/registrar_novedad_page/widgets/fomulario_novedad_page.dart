@@ -179,7 +179,7 @@ class _FormularioPageNovedadState extends State<FormularioPageNovedad> {
                     ],
                   )),
               Container(
-                  height: screenHeight * 0.1,
+                  height: screenHeight * 0.08,
                   width: screenWidth,
                   padding: EdgeInsets.only(top: screenHeight * 0.01),
                   child: MaterialButton(

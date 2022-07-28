@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:eyro_toast/eyro_toast.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:porteria/app/ui/apartamentos_page/apartamentos_page.dart';
 import 'package:porteria/app/ui/registrar_novedad_page/registrar_novedad_page.dart';
@@ -69,27 +70,39 @@ class _SplashState extends State<Splash> {
   final int _start = 20;
   Future<void> startTimer() async {
     userData = await obtenerDataUser();
-    timer = Timer.periodic(Duration(seconds: 2), (Timer _) {
-      print("tiempo $_start");
 
-   obtenerSesion();
+    userData = await obtenerDataUser();
+
+    timer = Timer.periodic(const Duration(seconds: 2), (Timer _) {
+      if (kDebugMode) {
+        print("tiempo $_start");
+      }
+
+   getSession();
     });
   }
 
-  Future obtenerSesion() async {
-    try {
+  Future getSession() async {
 
+    try {
+      if (kDebugMode) {
+        print( userData  );
+      }
       if (userData != null) {
         if (userData?.apiToken != null) {
           Navigator.pushReplacementNamed(context, "Home");
         }
       } else {
 
-        print(" no tiene usuario"  );
+        if (kDebugMode) {
+          print(" no tiene usuario"  );
+        }
         Navigator.pushReplacementNamed(context, "login_inquilino");
       }
     } catch (e) {
-      print("cach"  );
+      if (kDebugMode) {
+        print("cach"  );
+      }
      Navigator.pushReplacementNamed(context, "login_inquilino");
     }
   }
@@ -97,16 +110,16 @@ class _SplashState extends State<Splash> {
     if (payload != null) {
       debugPrint('notification payload: $payload');
     }
-    obtenerSesion();
+    getSession();
   }
 
-  Future Redirecion_clik_notificacion() async {
+  Future redirecionTapNotificacion() async {
 
-    obtenerSesion();
+    getSession();
 
   }
   Future onSelectNotification(String payload) async {
-    Redirecion_clik_notificacion();
+    redirecionTapNotificacion();
   }
 
 

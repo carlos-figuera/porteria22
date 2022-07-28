@@ -56,7 +56,7 @@ class _Drawer_repartidorState extends State<Drawer_admin> {
                       image: AssetImage("assets/fondo_banner.jpg"))),
               padding: EdgeInsets.only(top: 30, left: 10),
               child: Text("")),
-          ListTile(
+      /*    ListTile(
             title: Row(
               children: <Widget>[
                 icon_drawer("assets/icon_svgs/cartelera.svg"),
@@ -115,7 +115,7 @@ class _Drawer_repartidorState extends State<Drawer_admin> {
               Navigator.pop(context);
 
             },
-          ),
+          ),*/
 
 
           ListTile(
@@ -128,13 +128,13 @@ class _Drawer_repartidorState extends State<Drawer_admin> {
                     size: screenHeight * 0.05,
                   ),
                 ),
-                ExcludeSemantics(
+                const ExcludeSemantics(
                   child: Text(" Salir"),
                 )
               ],
             ),
             onTap: () {
-              guardarDataUser(null);
+              guardarDataUser(dataUser: null);
               Navigator.pushReplacementNamed(context, "login_inquilino");
             },
           ),

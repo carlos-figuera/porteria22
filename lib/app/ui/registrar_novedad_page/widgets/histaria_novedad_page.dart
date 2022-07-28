@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:porteria/app/modelos/Mautorizados.dart';
 import 'package:porteria/Util/Const.dart';
 import 'package:porteria/Util/Solicitudes_http.dart';
 import 'package:porteria/Util/widget_globales.dart';
@@ -99,11 +98,11 @@ class _HistorialPageNovedadState extends State<HistorialPageNovedad> {
         child: Column(
           children: [
             const SizedBox(
-              height: 5,
+              height: 10,
             ),
             ExcludeSemantics(
               child: Padding(
-                padding: const EdgeInsets.all(1.0),
+                padding: const EdgeInsets.all(5.0),
                 child: TextFormField(
                   onChanged: (dato) {
                     if (dato.length > 0) {

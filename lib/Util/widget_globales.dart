@@ -138,7 +138,7 @@ Widget sesion_expirada(double alto, BuildContext context) {
           ExcludeSemantics(
               child: FlatButton(
             onPressed: () {
-              guardarDataUser("0");
+              guardarDataUser(dataUser: null);
               Navigator.pushReplacementNamed(context, "login_inquilino");
             },
             child: Text("Aceptar"),

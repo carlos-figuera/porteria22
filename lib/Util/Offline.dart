@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:porteria/app/modelos/model_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future guardarDataUser(String data_user) async {
+Future guardarDataUser({String dataUser}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (data_user != null) {
-    await prefs.setString('data_user', data_user);
+  if (dataUser != null) {
+      prefs.setString('user', dataUser);
+
+
   } else {
-    await prefs.setString('data_user', null);
+      prefs.setString('user', null);
   }
 }
 
@@ -17,9 +19,10 @@ Future<UserData> obtenerDataUser() async {
   UserData userData =   UserData();
 
   try {
-    String Datos = await prefs.getString('data_user').toString();
+    String Datos = prefs.getString('user').toString();
+    print(Datos);
     var resBody = json.decode(Datos);
-    print(Datos );
+
     userData = UserData.fromJson1(resBody);
   } catch (e) {
     userData = null;

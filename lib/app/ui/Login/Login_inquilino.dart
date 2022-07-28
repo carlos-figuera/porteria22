@@ -15,10 +15,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // TODO: Add text editing controllers (101)
-  TextEditingController _emailController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _emailController =   TextEditingController();
+  final  TextEditingController _passwordController =   TextEditingController();
   Formularios _formularios;
-  bool _lights = false;
+  final bool _lights = false;
   Loads loads;
   EditText_U editText_U;
 
@@ -26,34 +26,31 @@ class _LoginPageState extends State<LoginPage> {
   //porteriaprueba@phenlinea.com
   //123456
 
-  UserData userData = new UserData();
+  UserData userData =   UserData();
 
   final _formKey = GlobalKey<FormState>();
   final FocusNode _clave = FocusNode();
   final FocusNode _email = FocusNode();
   final FocusNode _fake = FocusNode();
-  Solicitudes_http solicitudes_http;
+  Solicitudes_http solicitudesHttp;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _formularios = new Formularios(context: context);
-    _passwordController.text = "";
-    solicitudes_http = new Solicitudes_http(context);
-    editText_U = new EditText_U(context);
-    loads = new Loads(context);
-    //ObtenerSesion();
+    _formularios =   Formularios(context: context);
+    _emailController.text = "porteriaprueba@phenlinea.com";
+    _passwordController   .text = "123456";
+    solicitudesHttp =   Solicitudes_http(context);
+    editText_U =   EditText_U(context);
+    loads =   Loads(context);
+    // ObtenerSesion();
   }
 
  Login() async {
-
-
     if (_formKey.currentState.validate()) {
-
-
       print(_passwordController.text);
-      var dm = await solicitudes_http.login_usuario1(
+      var dm = await solicitudesHttp.login_usuario1(
           email: _emailController.text,
           clave: _passwordController.text,
           uri:   "/api/porteria-login",
@@ -61,10 +58,10 @@ class _LoginPageState extends State<LoginPage> {
       if (dm != null) {
         if (dm["ok"] == true) {
           Map<String, dynamic> decodedResp = dm["data"];
-          guardarDataUser(jsonEncode(decodedResp));
+          guardarDataUser(dataUser:jsonEncode(decodedResp) );
           UserData userData =  UserData();
-          userData = await obtenerDataUser();
-          print("Codigo respuesta ${userData.apiToken}");
+          //userData = await obtenerDataUser();
+         // print("Codigo respuesta ${userData.apiToken}");
 
           // Navigator.pop(context);
           Navigator.pushReplacementNamed(context, "Home");
@@ -149,8 +146,12 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialButton(
                       minWidth: MediaQuery.of(context).size.width,
                       height: scrreH * 0.08,
-                      onPressed: () {
-                        Login();
+                      onPressed: () async {
+                     Login();
+                        UserData userData =  UserData();
+                        userData = await obtenerDataUser();
+                          print("Codigo respuesta ${userData.apiToken}");
+
                       },
                       shape: const OutlineInputBorder(
                           borderRadius:

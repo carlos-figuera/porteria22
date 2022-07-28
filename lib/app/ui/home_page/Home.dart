@@ -6,6 +6,7 @@ import 'package:porteria/Util/Offline.dart';
 import 'package:porteria/Util/widget_globales.dart';
 import 'package:porteria/app/ui/apartamentos_page/apartamentos_page.dart';
 import 'package:porteria/app/ui/autorizados_page/autorizados_page.dart';
+import 'package:porteria/app/ui/home_page/Drawer.dart';
 import 'package:porteria/app/ui/home_page/ayuda.dart';
 import 'package:porteria/app/ui/notificacion_page/placa_notificacion.dart';
 import 'package:porteria/app/ui/placas_page/placa_page.dart';
@@ -72,7 +73,7 @@ class _HomeState extends State<Home> {
 
         leading:const Icon(Icons.clear,size:1 ,) ,
       ),
-
+     drawer:Drawer_admin() ,
       body: Container(
         child: Column(
           children: <Widget>[
@@ -217,7 +218,7 @@ class _HomeState extends State<Home> {
                                           title: "Salir",h: screenHeight),
                                       onTap: () {
 
-                                        guardarDataUser(null);
+                                        guardarDataUser(dataUser: null);
                                         Navigator.pushReplacementNamed(context, "login_inquilino");
                                       },
                                     )),

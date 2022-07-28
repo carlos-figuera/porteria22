@@ -103,13 +103,13 @@ class cuenta_pageState extends State<cuenta_page> with WidgetsBindingObserver {
                     // ...
                     // Then close the drawer
 
-                    guardarDataUser(null);
+                    guardarDataUser(dataUser: null);
                     Navigator.pushReplacementNamed(context, "login_inquilino");
 
                     // Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
                   },
                 ),
-                Divider(
+                const Divider(
                   height: 1,
                   thickness: 1,
                 ),

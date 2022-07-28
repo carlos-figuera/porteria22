@@ -29,15 +29,15 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   Solicitudes_http solicitudes_http;
   final _formKey = GlobalKey<FormState>();
   Formularios formularios;
-  TextEditingController _nombreController = new TextEditingController();
-  TextEditingController _cedulaController = new TextEditingController();
-  TextEditingController _TelefononController = new TextEditingController();
-  TextEditingController _placaController = new TextEditingController();
-  TextEditingController _nombreEmController = new TextEditingController();
-  TextEditingController _arlController = new TextEditingController();
-  TextEditingController _epsController = new TextEditingController();
+  TextEditingController _nombreController =   TextEditingController();
+  TextEditingController _cedulaController =   TextEditingController();
+  TextEditingController _TelefononController =   TextEditingController();
+  TextEditingController _placaController =   TextEditingController();
+  TextEditingController _nombreEmController =   TextEditingController();
+  TextEditingController _arlController =   TextEditingController();
+  TextEditingController _epsController =   TextEditingController();
 
-  TextEditingController _buscarApartamentoController= new TextEditingController();
+  TextEditingController _buscarApartamentoController=   TextEditingController();
   final FocusNode _cedula = FocusNode();
   final FocusNode _nombre = FocusNode();
   final FocusNode _telefono = FocusNode();
@@ -66,7 +66,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context1) {
         return AlertDialog(
-          title: Text('Seleciona un medio '),
+          title: const Text('Seleciona un medio '),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -123,78 +123,80 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
     final screenOri = MediaQuery.of(context).orientation;
-    final screenPortrait = Orientation.portrait;
-    return Container(
+    const screenPortrait = Orientation.portrait;
+    return   Container(
       child: SingleChildScrollView(
         child: Container(
-          height: screenOri == screenPortrait
-              ? screenHeight * (_radioGroupValue == "1" ? alto : 1.25)
-              : screenHeight * 1.35,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: <Widget>[
               Container(
                   height: screenOri == screenPortrait
-                      ? screenHeight * 0.5
-                      : screenHeight * 0.5,
+                      ? screenHeight * 0.45
+                      : screenHeight * 0.45,
                   margin: EdgeInsets.only(top: screenHeight * 0.02),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
 
-                        SearchField(
-                          suggestions: listaApartamentos,
-                          hint: 'Selecciona un apartamento',
-                          searchStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black.withOpacity(0.8),
-                          ),
-                          validator: (x) {
-                            if (x.length == 0) {
-                              _curretExtension=null;
-                              return null;
-                            }
-                            print(x);
-                            if (!listaApartamentos.contains(x) || x.isEmpty) {
-                              return 'Dato no valido, Selecciona un valor';
-                            }
+                       Expanded(child:  SearchField(
+                         suggestions: listaApartamentos,
+                         hint: 'Selecciona un apartamento',
+                         searchStyle: TextStyle(
+                           fontSize: 14,
+                           color: Colors.black.withOpacity(0.8),
+                         ),
+                         validator: (x) {
+                           if (x.length == 0) {
+                             _curretExtension=null;
+                             return null;
+                           }
+                           print(x);
+                           if (!listaApartamentos.contains(x) || x.isEmpty) {
+                             return 'Dato no valido, Selecciona un valor';
+                           }
 
-                            return null;
-                          },
-                          controller:_buscarApartamentoController ,
-                          searchInputDecoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black.withOpacity(0.8),
+                           return null;
+                         },
+                         controller:_buscarApartamentoController ,
+                         searchInputDecoration: InputDecoration(
+                             focusedBorder: OutlineInputBorder(
+                               borderSide: BorderSide(
+                                 color: Colors.black.withOpacity(0.8),
 
-                                ),
+                               ),
 
-                              ),
-                              border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                                  borderSide: BorderSide(color: Colors.red),
-                              ),
-                              suffixIcon: Icon(Icons.search_sharp)),
-
-
-                          maxSuggestionsInViewPort: 5,
-                          itemHeight: 40,
-                          onTap: (x) {
-                            FocusScope.of(context).requestFocus(  FocusNode());
-                            print(x);
+                             ),
+                             border: const OutlineInputBorder(
+                               borderRadius: BorderRadius.all(Radius.circular(15)),
+                               borderSide: BorderSide(color: Colors.red),
+                             ),
+                             suffixIcon: Icon(Icons.search_sharp)),
 
 
-                            _listApartamentos.forEach((apa) async {
-                              if (apa.name == _buscarApartamentoController.text) {
-                                    _curretExtension=apa;
-                              }
-                            });
-                            setState(() {});
-                          },
-                        ),
+                         maxSuggestionsInViewPort: 10,
 
-                        SizedBox(height: screenHeight *0.01,),
+                         itemHeight: 40,
+                         onTap: (x) {
+                           FocusScope.of(context).requestFocus(  FocusNode());
+                           print(x);
+
+
+                           _listApartamentos.forEach((apa) async {
+                             if (apa.name == _buscarApartamentoController.text) {
+                               _curretExtension=apa;
+                             }
+                           });
+                           setState(() {});
+                         },
+                       ), ),
+
+
+
+
+
+                        //SizedBox(height: screenHeight *0.01,),
                         // nombre
                         formularios.campo_Texto(
                             currentFocus: _nombre,
@@ -220,9 +222,10 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                             limit: 10,
                             fina: true),
                       ],
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                     ),
                   )),
+
               SizedBox(
                   height: screenHeight * 0.1,
                   child: Row(
@@ -254,72 +257,73 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                       )),
                     ],
                   )),
-              _radioGroupValue == "1"
-                  ? Container()
-                  : SizedBox(
-                      height: screenHeight * 0.2,
-                      width: screenWidth * 0.9,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                formularios.campo_Texto(
-                                    currentFocus: _nombreEm,
-                                    nextFocus: _arl,
-                                    nombreController: _nombreEmController,
-                                    nombre: "Nombre "),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.015),
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                formularios.campo_Texto(
-                                    currentFocus: _arl,
-                                    nextFocus: _eps,
-                                    nombreController: _arlController,
-                                    nombre: "ARL "),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                formularios.campo_Texto(
-                                    currentFocus: _eps,
-                                    nextFocus: _falso,
-                                    nombreController: _epsController,
-                                    nombre: "EPS "),
-                              ],
-                            ),
-                          ),
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      )),
-
-
-
 
               Container(
-                child: formularios.campo_Texto(
-                    currentFocus: _placa,
-                    nextFocus: _falso,
-                    nombreController: _placaController,
-                    fina: true,
-                    nombre: "Placa "),
-              ),
+                 height:_radioGroupValue == "1"?screenHeight * 0.12 : screenHeight * 0.35,
+                  width: screenWidth * 0.9,
+                  child: Column(
+                    children: [
+                      Visibility(
+                        visible:_radioGroupValue == "1"?false:true,
+                        child:    Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              formularios.campo_Texto(
+                                  currentFocus: _nombreEm,
+                                  nextFocus: _arl,
+                                  nombreController: _nombreEmController,
+                                  nombre: "Nombre "),
+                            ],
+                          ),
+                        ),  ),
+
+                      Visibility(
+                        visible:_radioGroupValue == "1"?false:true,
+                        child:          Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              formularios.campo_Texto(
+                                  currentFocus: _arl,
+                                  nextFocus: _eps,
+                                  nombreController: _arlController,
+                                  nombre: "ARL "),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              formularios.campo_Texto(
+                                  currentFocus: _eps,
+                                  nextFocus: _falso,
+                                  nombreController: _epsController,
+                                  nombre: "EPS "),
+                            ],
+                          ),
+                        ),  ),
+
+                      // SizedBox(height: screenHeight * 0.015),
+
+
+                      formularios.campo_Texto(
+                          currentFocus: _placa,
+                          nextFocus: _falso,
+                          nombreController: _placaController,
+                          fina: true,
+                          nombre: "Placa ")
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  )),
 
               //foto del visitante
-             /* Container(
-                  height: screenHeight * 0.1,
-                  width: screenWidth * 0.9,
-                  padding: const EdgeInsets.only(top: 10),
+              Container(
+                  height: screenHeight * 0.08,
+                  width: screenWidth * 0.8,
+                  padding: const EdgeInsets.only(top: 5),
                   child: ElevatedButton.icon(
                     onPressed: () {
                       _Dialo_seleccion_foto();
                     },
                     icon: Icon(
                       Icons.add_a_photo,
-                      size: 40,
+
                       color: _image != null ? Colors.green : Colors.grey,
                     ),
                     style: ButtonStyle(
@@ -337,13 +341,14 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                       style: TextStyle(
                           color: _image != null ? Colors.green : Colors.grey),
                     ),
-                  )),*/
+                  )),
 
+              SizedBox( height: 10,),
               //Botn guardar
               Container(
-                  height: screenHeight * 0.1,
+                  height: screenHeight * 0.085,
                   width: screenWidth,
-                  padding: EdgeInsets.only(top: screenHeight * 0.02),
+                  padding: const EdgeInsets.only(top: 10,bottom: 10),
                   child: MaterialButton(
 
                     shape: bordeBoton,
@@ -371,9 +376,9 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   Widget botonFoto(
       {Size screenSize, String name, int type, BuildContext context}) {
     return Container(
-        height: screenSize.height * 0.1,
+        height: screenSize.height * 0.08,
         width: screenSize.width * 0.9,
-        padding: EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 10),
         child: ElevatedButton.icon(
           onPressed: () {
             Navigator.pop(context);
