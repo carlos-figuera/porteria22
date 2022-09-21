@@ -226,7 +226,7 @@ class _HistorialPageNovedadState extends State<HistorialPageNovedad> {
                                     TextAlign.justify,
                                     wrapWords: true,
                                   ),
-                                  padding: const EdgeInsets.all(7),
+                                  padding: const EdgeInsets.all(10),
                                 ),
                               ),
                               Align(
@@ -242,7 +242,7 @@ class _HistorialPageNovedadState extends State<HistorialPageNovedad> {
                                     minFontSize: 12,
                                     textAlign: TextAlign.right,
                                   ),
-                                  padding: EdgeInsets.all(5),
+                                  padding: EdgeInsets.all(10),
                                 ),
                                 alignment: Alignment.bottomRight,
                               )

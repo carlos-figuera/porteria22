@@ -1,5 +1,6 @@
-import 'package:eyro_toast/eyro_toast.dart';
+
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -41,23 +42,20 @@ class Loads {
   //Color= 2 es para un mensaje de  error
   // Mensaje:  depende del caso
   Toast_Resull(int Color, String Mensage) async {
-    await   showToaster(
-        text: Mensage,
 
-        duration: ToastDuration.long,
-        gravity: ToastGravity.center,
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-    backgroundColor: Colors.grey[100]   ,
-    fontColor:Color==1?  Colors.red:Colors.green ,
-    textAlign: TextAlign.center,
+      showToast(
+        "$Mensage",
+        duration: const Duration(seconds: 4),
+        position: ToastPosition.center,
+       textPadding:const EdgeInsets.symmetric(
+         horizontal: 16,
+         vertical: 12,
+       ),
+        backgroundColor: Colors.grey[100]   ,
 
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    padding: const EdgeInsets.symmetric(
-    horizontal: 16,
-    vertical: 12,
-    ),
-    border: null,
-    );
-
+        textAlign: TextAlign.center,
+        radius: 3.0,
+        textStyle: TextStyle(fontSize: 30.0, color:Color==1?  Colors.red:Colors.green ,),
+      );
   }
 }

@@ -45,15 +45,7 @@ String url_foto_defaul="https://firebasestorage.googleapis.com/v0/b/candy-disco.
   }
 
 
-  Future<File> getImage_Camera() async {
-    return await ImagePicker.pickImage(source: ImageSource.camera);
 
-
-  }
-
-  Future <File> getImage_Galery() async {
-    return await ImagePicker.pickImage(source: ImageSource.gallery);
-  }
 
   /*Future getImage2(int tipo) async {
     var image = await im.ImagePicker.pickImage(source: im.ImageSource.camera);

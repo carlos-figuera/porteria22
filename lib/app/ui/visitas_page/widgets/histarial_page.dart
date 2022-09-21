@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:porteria/app/modelos/MVisitas.dart';
@@ -39,18 +40,26 @@ class _HistorialPageState extends State<HistorialPage> {
   Widget textoItems({String texto, double tamano, Color colo}) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 3),
-        child: Text(
-          texto,
-          softWrap: true,
-          style: TextStyle(
-              fontSize: tamano, fontWeight: FontWeight.w600, color: colo),
-          textAlign: TextAlign.left,
-        ));
+        child:  Row(children: [
+
+
+          Expanded(child: AutoSizeText(
+            texto,
+            maxLines: 2,
+            maxFontSize:16 ,
+            minFontSize: 14,
+            overflow:TextOverflow.ellipsis ,
+            softWrap: true,
+            style: TextStyle(
+                fontSize: tamano, fontWeight: FontWeight.w600, color: colo),
+            textAlign: TextAlign.left,
+          )  ) ,
+        ],));
   }
 
   gettData() async {
     var snapshot = await solicitudes_http.getData("/api/visits");
-    _listVisitas = new List();
+    _listVisitas =   [];
     if (snapshot != null) {
       if (snapshot["codigo"] == "200") {
         var data1 = snapshot["data"] as List;
@@ -59,7 +68,10 @@ class _HistorialPageState extends State<HistorialPage> {
         print("Desde hasData  ${snapshot["codigo"]} ");
         print("Desde hasData  ${_listVisitas.length} ");
         _carga = false;
-        setState(() {});
+        if(mounted)
+        {
+          setState(() {});
+        }
       } else {
         _carga = false;
         setState(() {});
@@ -128,6 +140,33 @@ class _HistorialPageState extends State<HistorialPage> {
     }
   }
 
+
+  List<String> namApt=[];
+
+String nameAtp({String dni })
+{
+  String n= "";
+  if(dni.contains("#")){
+    List<String> ff= dni.split("#") ;
+     if(ff.length==0)
+     {
+       n= ff[0];
+     } else{
+       n= ff[1];
+     }
+  }
+  return n;
+}
+  String DNIAtp({String dni })
+  {
+    String n= "";
+    if(dni.contains("#")){
+      List<String> ff= dni.split("#") ;
+      n= ff[0];
+    }
+    return n;
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -154,14 +193,14 @@ class _HistorialPageState extends State<HistorialPage> {
                             }
                           });
                           setState(() {});
-                        } else {
+                        }else if (dato.isEmpty)   {
                           _listVisitas.forEach((lisau) async {
                             lisau.estado = 1;
                           });
                         }
                       },
                       onEditingComplete:(){
-                        FocusScope.of(context).requestFocus(new FocusNode());
+                        FocusScope.of(context).requestFocus(  FocusNode());
                       } ,
                       decoration: InputDecoration(
                           suffixIcon: Icon(
@@ -187,6 +226,7 @@ class _HistorialPageState extends State<HistorialPage> {
                 Expanded(
                     child: ListView.builder(
                         itemCount: _listVisitas.length,
+                        reverse: true,
                         padding: EdgeInsets.all(2.0),
                         itemBuilder: (context, position) {
                           Color colorCheck =
@@ -202,7 +242,7 @@ class _HistorialPageState extends State<HistorialPage> {
                           print(_listVisitas[position].picture);
                           return _listVisitas[position].estado == 1
                               ? Container(
-                                  height: screenHeight * 0.26,
+                                  height: screenHeight * 0.28,
                                   child: Stack(
                                     children: [
                                       Card(
@@ -212,84 +252,87 @@ class _HistorialPageState extends State<HistorialPage> {
                                           children: <Widget>[
                                             //foto del visitante
                                            // assets/cuenta.png
-                                            
                                             Container(
                                             width:screenWidth * 0.25,
                                             height: screenHeight* 0.25,
                                               child: ClipRRect(
                                                 child:_listVisitas[position].picture==""?Image.asset("assets/cuenta.png") :imagen_cache_plantilla(url: _listVisitas[position].picture)          ,
                                                 borderRadius:
-                                                    new BorderRadius.all(
+                                                      const BorderRadius.all(
                                                   Radius.circular(5),
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 3,
                                             ),
 
                                             //Datos del visitante
-                                            Column(
-                                              children: <Widget>[
-                                                ExcludeSemantics(
-                                                    child: textoItems(
-                                                        texto:
-                                                            "APTO: ${_listVisitas[position].dni}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                                ExcludeSemantics(
-                                                    child: textoItems(
-                                                        texto:
-                                                            "Nombre: ${_listVisitas[position].name}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                                ExcludeSemantics(
-                                                    child: textoItems(
-                                                        texto:
-                                                            "Cedula: ${_listVisitas[position].dni}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                                ExcludeSemantics(
-                                                    child: textoItems(
-                                                        texto:
-                                                            "placa: ${_listVisitas[position].plate}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                                ExcludeSemantics(
-                                                    child: textoItems(
-                                                        texto:
-                                                            "Empresa: ${_listVisitas[position].company}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                                ExcludeSemantics(
-                                                    child: textoItems(
-                                                        texto:
-                                                            "EPS-ARL: ${_listVisitas[position].eps}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                                ExcludeSemantics(
-                                                    child: textoItems(
-                                                        texto:
-                                                            "Entrada: ${_listVisitas[position].checkin}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                                SizedBox(
-                                                  height: 3,
-                                                ),
-                                                ExcludeSemantics(
-                                                    child: textoItems(
-                                                        texto:
-                                                            "Salida: ${_listVisitas[position].checkout}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                                SizedBox(
-                                                  height: 2,
-                                                ),
-                                              ],
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
+                                            Expanded(
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Expanded(
+                                          //  json["dni"].toString().split("#")[0]
+
+                                                      child: textoItems(
+                                                          texto:
+                                                           "APTO :  ${_listVisitas[position].extension.name }  ${nameAtp(dni:_listVisitas[position].dni )}  "  ,
+                                                          tamano: 14,
+                                                          colo: Colors.black54)),
+                                                  Expanded(
+                                                      child: textoItems(
+                                                          texto:
+                                                              "Nombre : ${_listVisitas[position].name}",
+                                                          tamano: 14,
+                                                          colo: Colors.black54)),
+                                                  Expanded(
+                                                      child: textoItems(
+                                                          texto:
+                                                              "Cedula :    ${DNIAtp(dni:_listVisitas[position].dni)}  "  ,
+                                                          tamano: 14,
+                                                          colo: Colors.black54)),
+                                                  Expanded(
+                                                      child: textoItems(
+                                                          texto:
+                                                              "placa : ${_listVisitas[position].plate}",
+                                                          tamano: 14,
+                                                          colo: Colors.black54)),
+                                                  Expanded(
+                                                      child: textoItems(
+                                                          texto:
+                                                              "Empresa : ${_listVisitas[position].company}",
+                                                          tamano: 14,
+                                                          colo: Colors.black54)),
+                                                  Expanded(
+                                                      child: textoItems(
+                                                          texto:
+                                                              "EPS-ARL : ${_listVisitas[position].eps.toString().toUpperCase()} - ${_listVisitas[position].arl.toString().toUpperCase() } ",
+                                                          tamano: 14,
+                                                          colo: Colors.black54)),
+                                                  ExcludeSemantics(
+                                                      child: textoItems(
+                                                          texto:
+                                                              "Entrada: ${_listVisitas[position].checkin}",
+                                                          tamano: 14,
+                                                          colo: Colors.black54)),
+                                                  SizedBox(
+                                                    height: 3,
+                                                  ),
+                                                  Expanded(
+                                                      child: textoItems(
+                                                          texto:
+                                                              "Salida : ${_listVisitas[position].checkout}",
+                                                          tamano: 14,
+                                                          colo: Colors.black54)),
+                                                  SizedBox(
+                                                    height: 2,
+                                                  ),
+                                                ],
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceAround,
+                                              ),
                                             ),
                                           ],
                                         ),

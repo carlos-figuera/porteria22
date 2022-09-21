@@ -38,7 +38,7 @@ class Solicitudes_http {
     };
     var url = "$UrlBase$uri";
     //encode Map to JSON
-    http.Response response = await http.delete(url, headers: {
+    http.Response response = await http.delete(Uri.parse(url)   , headers: {
       HttpHeaders.authorizationHeader: "Bearer $token",
       "Content-Type": "application/json"
     });
@@ -52,20 +52,20 @@ class Solicitudes_http {
     } else if (response.statusCode == 302) {
       // Si LA PETICION FALLO
       loads.cerrar();
-      new Future.delayed(new Duration(seconds: 1), () async {
+        Future.delayed(new Duration(seconds: 1), () async {
         loads?.Toast_Resull(1, "Ocurrió un error ");
       });
       return {'ok': false, 'codigo': response.statusCode, "data": ""};
     } else if (response.statusCode == 401) {
       // Si LA PETICION FALLO
       loads.cerrar();
-      new Future.delayed(new Duration(seconds: 1), () async {
+        Future.delayed(new Duration(seconds: 1), () async {
         loads.Toast_Resull(1, "Ocurrió un error ");
       });
       return {'ok': false, 'codigo': response.statusCode, "data": ""};
     } else {
       loads.cerrar();
-      new Future.delayed(new Duration(seconds: 1), () async {
+        Future.delayed(new Duration(seconds: 1), () async {
         loads.Toast_Resull(1, "Ocurrió un error ");
       });
       return {'ok': false, 'codigo': response.statusCode, "data": ""};
@@ -74,7 +74,7 @@ class Solicitudes_http {
 
      Future<Map<String, dynamic>>login_usuario1(
       {String email, String clave, String  uri, String deciveToken}) async {
-    loads = new Loads(context);
+    loads =  Loads(context);
     loads?.Carga("Verificando...");
     var url = "$UrlBase$uri";
     print('logeando');
@@ -84,7 +84,7 @@ class Solicitudes_http {
     };
     http.Response resp; //"/api/extension-login"
     try {
-      resp = await http.post(  url,
+      resp = await http.post(  Uri.parse(url)   ,
           body: authData,
           headers: {"Content-Type": "application/x-www-form-urlencoded"});
 
@@ -98,17 +98,17 @@ class Solicitudes_http {
           'codigo': resp.statusCode,
           "data": decodedResp["user"]
         };
-      } else if (resp.statusCode == 401) {
+      } else if (resp.statusCode >= 401) {
         loads.cerrar();
-        loads.Toast_Resull(1, "Error al iniciar sesión, intenta nuevamente");
+        loads.Toast_Resull(1, "Error al iniciar sesión, intenta nuevamente 401");
         print(resp.statusCode);
         return {'ok': false, 'codigo': resp.statusCode};
       }
     } catch (_) {
-      //Navigator.popAndPushNamed(context, "login");
-      //  Toat_mensaje_center(color: 1, mensaje: "Error al iniciar sesión, intenta nuevamente");
+
       print('WTF');
-      loads.Toast_Resull(1, "Error al iniciar sesión, intenta nuevamente");
+      loads.Toast_Resull(1, "Error al iniciar sesión, intenta nuevamente $_");
+      loads.cerrar();
       return {
         'ok': false,
         'mensaje': "Error al iniciar sesión, intenta nuevamente"
@@ -125,7 +125,7 @@ class Solicitudes_http {
     Map<String, dynamic> _re = {"data": null, "codigo": "100"};
     if (conexion) {
       var url = "$UrlBase$url1";
-      http.Response response = await http.get(url);
+      http.Response response = await http.get(Uri.parse(url)   );
       print(url);
       if (response.statusCode <= 210) {
         loads.cerrar();
@@ -158,7 +158,7 @@ class Solicitudes_http {
     var conexion = await checkConnection();
 
  if (conexion ) {
-      http.Response response = await http.get(url, headers: {
+      http.Response response = await http.get(Uri.parse(url)   , headers: {
         HttpHeaders.acceptHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       });
@@ -200,7 +200,7 @@ class Solicitudes_http {
     loads = new Loads(context);
     loads.Carga("Procesando.");
 
-
+    var url = "$UrlBase/api/extensions/$id_extension/sendpassword";
     Map<String, dynamic> decodedResp = {'ok': false, 'codigo': "0"};
     final authData = {
       'phone': phone,
@@ -208,7 +208,7 @@ class Solicitudes_http {
     http.Response resp;
     try {
       resp = await http.post(
-         "$UrlBase/api/extensions/$id_extension/sendpassword",
+          Uri.parse(url)    ,
           body: authData,
           headers: {
             HttpHeaders.acceptHeader: "application/json",
@@ -276,7 +276,7 @@ class Solicitudes_http {
     var url = "$UrlBase$ur";
     http.Response resp; //"/api/extension-login"
     try {
-      resp = await http.post( url, body:update==1? authData:authData1, headers: {
+      resp = await http.post( Uri.parse(url)   , body:update==1? authData:authData1, headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         HttpHeaders.authorizationHeader: "Bearer $token"
 
@@ -329,7 +329,7 @@ class Solicitudes_http {
     };
     http.Response resp; //"/api/extension-login"
     try {
-      resp = await http.post("$UrlBase$url", body: authData, headers: {
+      resp = await http.post(Uri.parse("$UrlBase$url")      , body: authData, headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         HttpHeaders.authorizationHeader: "Bearer $token"
 
@@ -381,7 +381,7 @@ class Solicitudes_http {
     };
     http.Response resp; //"/api/extension-login"
     try {
-      resp = await http.post("$UrlBase$url", body: authData, headers: {
+      resp = await http.post(Uri.parse("$UrlBase$url")    , body: authData, headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         HttpHeaders.authorizationHeader: "Bearer $token"
 
@@ -436,7 +436,7 @@ class Solicitudes_http {
     var conexion = await checkConnection();
 
     if (conexion ) {
-      http.Response response = await http.get(url, headers: {
+      http.Response response = await http.get(Uri.parse( url )   , headers: {
         HttpHeaders.acceptHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       });

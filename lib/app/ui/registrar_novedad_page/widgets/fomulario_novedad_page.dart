@@ -33,24 +33,28 @@ class _FormularioPageNovedadState extends State<FormularioPageNovedad> {
   File _image3;
   int fileIndex=1;
   Future getImage(int tipo) async {
-    var image = await ImagePicker.pickImage(
+
+    final ImagePicker _picker = ImagePicker();
+
+    var image = await _picker.pickImage(
         source: tipo == 1 ? ImageSource.gallery : ImageSource.camera);
+
 
     if(fileIndex==1)
     {
-      _image1 = image;
+      _image1 = File( image.path );
       _image1.length().then((len) {
         print("TAMANO foto  $len");
       });
     }else if(fileIndex==2)
     {
-      _image2 = image;
+      _image2 = File( image.path );
       _image2.length().then((len) {
         print("TAMANO foto   $len");
       });
     }else if(fileIndex==3)
     {
-      _image3= image;
+      _image3= File( image.path );
       _image3.length().then((len) {
         print("TAMANO foto   $len");
       });

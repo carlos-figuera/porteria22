@@ -1,28 +1,28 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:eyro_toast/eyro_toast.dart';
+
 import 'package:intl/intl.dart';
+import 'package:oktoast/oktoast.dart';
 //Parametros
 //Color= 1 es para un mensaje de exito
 //Color= 2 es para un mensaje de  error
 // Mensaje:  depende del caso
 Toast_Resull(int Color, String Mensage) async {
+  showToast(
+    "$Mensage",
+    duration: const Duration(seconds: 10),
+    position: ToastPosition.center,
 
-  await   showToaster(
-    text: Mensage,
-    duration: ToastDuration.long,
-    gravity: ToastGravity.center,
-    borderRadius: const BorderRadius.all(Radius.circular(16)),
-    backgroundColor: Colors.white   ,
-    fontColor:Color==1?  Colors.green:Colors.red ,
-    textAlign: TextAlign.center,
-
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    padding: const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 12,
+    textPadding:const EdgeInsets.symmetric(
+      horizontal: 20,
+      vertical: 20,
     ),
-    border: null,
+    backgroundColor: Colors.grey   ,
+
+    textAlign: TextAlign.center,
+    radius: 10.0,
+
+    textStyle: TextStyle(fontSize: 30.0, color:Color==1?  Colors.red:Colors.green ,),
   );
 
 

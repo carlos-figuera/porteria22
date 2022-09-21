@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
 
   nombreUnida()
   async {
-    UserData userData = new UserData();
+    UserData userData =   UserData();
     userData = await obtenerDataUser();
 
     nombreUnidad=userData.name!=null?userData.name:"";
@@ -65,13 +65,13 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Padding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(1),
           child: Text("$nombreUnidad",style: TextStyle(fontSize:fontTitulo ),),
         ),
         centerTitle: true,
         backgroundColor: lightPrimary,
 
-        leading:const Icon(Icons.clear,size:1 ,) ,
+      //  leading:const Icon(Icons.clear,size:1 ,) ,
       ),
      drawer:Drawer_admin() ,
       body: Container(
@@ -94,9 +94,122 @@ class _HomeState extends State<Home> {
                       child: Column(
                         children: <Widget>[
 
-
-                          //Fila comunicacion 1
                           Expanded(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: cardNoti(
+                                          ico:Icons.headset_mic ,
+                                          title: "Novedades",h: screenHeight),
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegistrarNovedadPage()));
+                                      },
+                                    )),
+
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: cardNoti(
+                                          ico:Icons.transfer_within_a_station_outlined ,
+                                          title: "Visitas",h: screenHeight),
+                                      onTap: () {
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => VisitasPage()));
+                                      },
+                                    )),
+
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: Container(),
+                                      onTap: () {
+
+                                      },
+                                    )),
+                              ],
+                            ),
+                            flex: 3,
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: <Widget>[
+
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: Container(),
+                                      onTap: () {
+
+                                      },
+                                    )),
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: Container(),
+                                      onTap: () {
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    cuenta_page()));
+                                      },
+                                    )),
+
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: Container(),
+                                      onTap: () {
+
+                                      },
+                                    )),
+
+                              ],
+                            ),
+                            flex: 4,
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: <Widget>[
+
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: Container(),
+                                      onTap: () {
+
+                                      },
+                                    )),
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: Container(),
+                                      onTap: () {
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    cuenta_page()));
+                                      },
+                                    )),
+
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: Container(),
+                                      onTap: () {
+
+                                      },
+                                    )),
+
+                              ],
+                            ),
+                            flex: 4,
+                          ),
+                          //Fila comunicacion 1
+                       /*   Expanded(
                             child: Row(
                               children: <Widget>[
                                 Expanded(
@@ -246,7 +359,7 @@ class _HomeState extends State<Home> {
                               ],
                             ),
                             flex: 4,
-                          ),
+                          ),*/
                         ],
                       )),
                 ),

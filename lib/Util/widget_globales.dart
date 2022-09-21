@@ -56,13 +56,13 @@ Widget cardNoti({IconData ico, String  title="", double h}) {
       children: <Widget>[
         Expanded(
           child: Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(top: 5),
             child: Stack(
               children: [
                 Icon(
                   ico,
                   color: Button,
-                  size: h * 0.15,
+                  size: h * 0.13,
                 ),
                /* Positioned(
                   child:verNotifi? CircleAvatar(
@@ -74,12 +74,13 @@ Widget cardNoti({IconData ico, String  title="", double h}) {
           ),
           flex: flex_img,
         ),
-        SizedBox(height: marginTop_nombre),
+        const SizedBox(height: 10),
         Expanded(
           child: Text(
             title,
-            style: TextStyle(fontSize: fon_nombre),
+            style: TextStyle(fontSize: fon_nombre,fontWeight:FontWeight.w700 ),
             textAlign: TextAlign.center,
+
           ),
           flex: flex_nombre,
         )

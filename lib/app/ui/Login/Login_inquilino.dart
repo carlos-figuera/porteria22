@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:porteria/app/modelos/model_user.dart';
 import 'package:porteria/Util/Const.dart';
 import 'package:porteria/Util/EditText_Utli.dart';
@@ -7,6 +8,7 @@ import 'package:porteria/Util/Load.dart';
 import 'package:porteria/Util/Offline.dart';
 import 'package:porteria/Util/Solicitudes_http.dart';
 import 'package:porteria/Util/componentes/formularios/fomulario.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -39,16 +41,34 @@ class _LoginPageState extends State<LoginPage> {
     // TODO: implement initState
     super.initState();
     _formularios =   Formularios(context: context);
-    _emailController.text = "porteriaprueba@phenlinea.com";
-    _passwordController   .text = "123456";
+    //_emailController.text = "porteriaprueba@phenlinea.com";
+  //  _passwordController   .text = "123456";
+     _emailController.text = "";
+       _passwordController   .text = "";
     solicitudesHttp =   Solicitudes_http(context);
     editText_U =   EditText_U(context);
     loads =   Loads(context);
     // ObtenerSesion();
+    datassss();
+
+  }
+
+  datassss() async {
+
+    final storage =   FlutterSecureStorage();
+
+// Read value
+    String value = await storage.read(key: "Home");
+    print("value  $value ");
+
   }
 
  Login() async {
-    if (_formKey.currentState.validate()) {
+
+
+
+
+   if (_formKey.currentState.validate()) {
       print(_passwordController.text);
       var dm = await solicitudesHttp.login_usuario1(
           email: _emailController.text,
@@ -60,8 +80,8 @@ class _LoginPageState extends State<LoginPage> {
           Map<String, dynamic> decodedResp = dm["data"];
           guardarDataUser(dataUser:jsonEncode(decodedResp) );
           UserData userData =  UserData();
-          //userData = await obtenerDataUser();
-         // print("Codigo respuesta ${userData.apiToken}");
+          // userData = await obtenerDataUser();
+            // print("Codigo respuesta ${userData.apiToken}");
 
           // Navigator.pop(context);
           Navigator.pushReplacementNamed(context, "Home");
@@ -148,9 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: scrreH * 0.08,
                       onPressed: () async {
                      Login();
-                        UserData userData =  UserData();
-                        userData = await obtenerDataUser();
-                          print("Codigo respuesta ${userData.apiToken}");
+
 
                       },
                       shape: const OutlineInputBorder(

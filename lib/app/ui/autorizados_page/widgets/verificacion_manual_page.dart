@@ -227,18 +227,7 @@ class _VerificacionManualPageState extends State<VerificacionManualPage> {
                                               ))),
                                   maxSuggestionsInViewPort: 5,
                                   itemHeight: 40,
-                                  onTap: (x) {
-                                    FocusScope.of(context)
-                                        .requestFocus(FocusNode());
-                                    _buscarApartamentoController.text = x;
-                                    _lisApatamentos.forEach((apa) async {
-                                      if (apa.name ==
-                                          _buscarApartamentoController.text) {
-                                        dataAparatmento = apa;
-                                      }
-                                    });
-                                    setState(() {});
-                                  },
+
                                 ),
                               ),
                             ),

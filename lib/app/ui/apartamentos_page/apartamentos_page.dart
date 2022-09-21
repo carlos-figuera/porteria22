@@ -126,7 +126,11 @@ class _ApartamentosPageState extends State<ApartamentosPage>
     return Container(
         color: Colors.white,
         child: SearchField (
-          suggestions: listaApartamentosS ,
+         suggestions: listaApartamentosS ,
+           /*suggestions: _listApartademntos
+              .map((country) =>
+             searchFieldListItem(country.name, item: country))
+              .toList(),*/
           hint: 'Selecciona un apartamento',
           searchStyle: TextStyle(
             fontSize: 14,
@@ -168,7 +172,7 @@ class _ApartamentosPageState extends State<ApartamentosPage>
           maxSuggestionsInViewPort: 3,
           itemHeight: 40,
 
-          onTap: (x) {
+        /*  onSuggestionTap: (x) {
             FocusScope.of(context).requestFocus(new FocusNode());
             print(x);
 
@@ -181,7 +185,7 @@ class _ApartamentosPageState extends State<ApartamentosPage>
               }
             });
             setState(() {});
-          },
+          },*/
         ));
   }
 

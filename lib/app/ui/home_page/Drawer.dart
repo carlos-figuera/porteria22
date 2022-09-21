@@ -48,14 +48,20 @@ class _Drawer_repartidorState extends State<Drawer_admin> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           Container(
-              height: MediaQuery.of(context).size.height * 0.38,
-              width: MediaQuery.of(context).size.width,
-              decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage("assets/fondo_banner.jpg"))),
-              padding: EdgeInsets.only(top: 30, left: 10),
-              child: Text("")),
+            color:Colors.grey[100],
+            child: Container(
+                height: MediaQuery.of(context).size.height * 0.38,
+                width: MediaQuery.of(context).size.width,
+
+                decoration:     const BoxDecoration(
+
+                    image:   DecorationImage(
+                        fit: BoxFit.contain,
+
+                        image: AssetImage("assets/Logo.png"))),
+                margin: const EdgeInsets.only( top: 50,left: 10,right: 10,bottom: 10 ),
+                child: const Text("")),
+          ),
       /*    ListTile(
             title: Row(
               children: <Widget>[

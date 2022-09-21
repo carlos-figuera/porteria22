@@ -1,7 +1,9 @@
 import 'dart:async';
-import 'package:eyro_toast/eyro_toast.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:porteria/app/ui/apartamentos_page/apartamentos_page.dart';
 import 'package:porteria/app/ui/registrar_novedad_page/registrar_novedad_page.dart';
 import 'package:porteria/app/ui/visitas_page/visitas_page.dart';
@@ -12,7 +14,7 @@ import 'app/ui/Login/Login_inquilino.dart';
 import 'app/ui/home_page/Home.dart';
 
 void main() {
-  EyroToastSetup.shared.navigatorKey = GlobalKey<NavigatorState>();
+
   SharedPreferences.setMockInitialValues({});
   runApp(MyApp());
 }
@@ -21,23 +23,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: EyroToastSetup.shared.navigatorKey,
-      title: 'Control de Porterias',
-      theme: ThemeData(),
-      initialRoute: "splash",
-      routes: {
-        "splash": (BuildContext context) => Splash(),
-        "login_inquilino": (BuildContext context) => LoginPage(),
-        "Home": (BuildContext context) => Home(),
-        "VisitasPage": (BuildContext context) => VisitasPage(),
-        "ApartamentosPage": (BuildContext context) => ApartamentosPage(),
-        "RegistrarNovedadPage": (BuildContext context) => RegistrarNovedadPage(),
-      },
-      debugShowCheckedModeBanner: false,
+    return OKToast(
+      child: MaterialApp(
+
+        title: 'Control de Porterias',
+        theme: ThemeData(),
+        initialRoute: "splash",
+        routes: {
+          "splash": (BuildContext context) => Splash(),
+          "login_inquilino": (BuildContext context) => LoginPage(),
+          "Home": (BuildContext context) => Home(),
+          "VisitasPage": (BuildContext context) => VisitasPage(),
+          "ApartamentosPage": (BuildContext context) => ApartamentosPage(),
+          "RegistrarNovedadPage": (BuildContext context) => RegistrarNovedadPage(),
+        },
+        debugShowCheckedModeBanner: false,
 
 
 
+      ),
     );
   }
 }
@@ -83,6 +87,35 @@ class _SplashState extends State<Splash> {
   }
 
   Future getSession() async {
+// Obtain shared preferences.
+    final prefs = await SharedPreferences.getInstance();
+/*
+// Save an integer value to 'counter' key.
+    await prefs.setInt('counter', 10);
+// Save an boolean value to 'repeat' key.
+    await prefs.setBool('repeat', true);
+// Save an double value to 'decimal' key.
+    await prefs.setDouble('decimal', 1.5);
+// Save an String value to 'action' key.
+    await prefs.setString('action', 'Start');
+// Save an list of strings to 'items' key.
+    await prefs.setStringList('items', <String>['Earth', 'Moon', 'Sun']);*/
+// Create storage
+
+    final storage =   FlutterSecureStorage();
+
+
+// Read all values
+  //  Map<String, String> allValues = await storage.readAll();
+
+// Delete value
+ //   await storage.delete(key: "Home");
+
+// Delete all
+  //  await storage.deleteAll();
+
+// Write value
+ //   await storage.write(key: "Home", value: "gardado ffffff");
 
     try {
       if (kDebugMode) {

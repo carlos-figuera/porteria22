@@ -59,8 +59,8 @@ class MVisitas {
     plate: json["plate"]!=null?json["plate"]:"",
     checkin:json["checkin"]!=null? DateFormat('yyyy-MM-dd').format(DateTime.parse(json["checkin"]) )  :"",
     checkout: json["checkout"]!=null? DateFormat('yyyy-MM-dd HH:MM').format(DateTime.parse(json["checkout"]) )  :"",
-    extension: Extension.fromJson(json["extension"]),
-    adminId: json["admin_id"],
+    extension:json["extension"]==null?Extension(id: 0,name:""): Extension.fromJson(json["extension"]),
+    adminId: json["admin_id"]??"",
     picture:json["picture"],
     estado: 1
   );
@@ -94,8 +94,8 @@ class Extension {
   String name;
 
   factory Extension.fromJson(Map<String, dynamic> json) => Extension(
-    id: json["id"],
-    name: json["name"],
+    id: json["id"]??0,
+    name: json["name"]??"",
   );
 
   Map<String, dynamic> toJson() => {

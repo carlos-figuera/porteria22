@@ -22,6 +22,8 @@ class FormularioPageVisita extends StatefulWidget {
 
 class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   double alto = 1;
+  bool checkedValue = false;
+  bool newApt = false;
   List<DropdownMenuItem> lis_Extensiones = [];
   MApartameto _curretExtension;
   List<MApartameto> _listApartamentos = [];
@@ -29,17 +31,19 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   Solicitudes_http solicitudes_http;
   final _formKey = GlobalKey<FormState>();
   Formularios formularios;
-  TextEditingController _nombreController =   TextEditingController();
-  TextEditingController _cedulaController =   TextEditingController();
-  TextEditingController _TelefononController =   TextEditingController();
-  TextEditingController _placaController =   TextEditingController();
-  TextEditingController _nombreEmController =   TextEditingController();
-  TextEditingController _arlController =   TextEditingController();
-  TextEditingController _epsController =   TextEditingController();
+  TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _nombreAptController = TextEditingController();
+  TextEditingController _cedulaController = TextEditingController();
+  TextEditingController _telefononController = TextEditingController();
+  TextEditingController _placaController = TextEditingController();
+  final TextEditingController _nombreEmController = TextEditingController();
+  final TextEditingController _arlController = TextEditingController();
+  final TextEditingController _epsController = TextEditingController();
 
-  TextEditingController _buscarApartamentoController=   TextEditingController();
+  TextEditingController _buscarApartamentoController = TextEditingController(text: "");
   final FocusNode _cedula = FocusNode();
   final FocusNode _nombre = FocusNode();
+  final FocusNode _nombreApt = FocusNode();
   final FocusNode _telefono = FocusNode();
   final FocusNode _placa = FocusNode();
   final FocusNode _nombreEm = FocusNode();
@@ -49,10 +53,15 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
 
   File _image;
   var _radioGroupValue = '1';
+
   Future getImage(int tipo) async {
-    var image = await ImagePicker.pickImage(
+    final ImagePicker _picker = ImagePicker();
+
+    var image = await _picker.pickImage(
         source: tipo == 1 ? ImageSource.gallery : ImageSource.camera);
-    _image = image;
+
+
+    _image = File( image.path );
     _image.length().then((len) {
       print("TAMANO foto camara 1  $len");
     });
@@ -60,7 +69,9 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   }
 
   Future<void> _Dialo_seleccion_foto() async {
-    final screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery
+        .of(context)
+        .size;
     return showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -101,17 +112,27 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
       if (snapshot["codigo"] == "200") {
         var data1 = snapshot["data"] as List;
 
-        _listApartamentos = data1.map((model) => MApartameto.fromJson(model)).toList();
+        _listApartamentos =
+            data1.map((model) => MApartameto.fromJson(model)).toList();
         print(data1);
-        lis_Extensiones = _listApartamentos.map((item) => DropdownMenuItem(child: Text(item.name), value: item,)).toList();
+        lis_Extensiones = _listApartamentos
+            .map((item) =>
+            DropdownMenuItem(
+              child: Text(item.name),
+              value: item,
+            ))
+            .toList();
 
         _listApartamentos.forEach((apa) async {
           listaApartamentos.add(apa.name);
           print("Desde hasData  ${apa.name} ");
         });
 
+        if(mounted)
+        {
+          setState(() {});
+        }
 
-        setState(() {});
       } else {
         setState(() {});
       }
@@ -119,12 +140,16 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   }
 
   Widget Containerregistrar() {
-    final screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery
+        .of(context)
+        .size;
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
-    final screenOri = MediaQuery.of(context).orientation;
+    final screenOri = MediaQuery
+        .of(context)
+        .orientation;
     const screenPortrait = Orientation.portrait;
-    return   Container(
+    return Container(
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -139,65 +164,116 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-
-                       Expanded(child:  SearchField(
-                         suggestions: listaApartamentos,
-                         hint: 'Selecciona un apartamento',
-                         searchStyle: TextStyle(
-                           fontSize: 14,
-                           color: Colors.black.withOpacity(0.8),
-                         ),
-                         validator: (x) {
-                           if (x.length == 0) {
-                             _curretExtension=null;
-                             return null;
-                           }
-                           print(x);
-                           if (!listaApartamentos.contains(x) || x.isEmpty) {
-                             return 'Dato no valido, Selecciona un valor';
-                           }
-
-                           return null;
-                         },
-                         controller:_buscarApartamentoController ,
-                         searchInputDecoration: InputDecoration(
-                             focusedBorder: OutlineInputBorder(
-                               borderSide: BorderSide(
-                                 color: Colors.black.withOpacity(0.8),
-
-                               ),
-
-                             ),
-                             border: const OutlineInputBorder(
-                               borderRadius: BorderRadius.all(Radius.circular(15)),
-                               borderSide: BorderSide(color: Colors.red),
-                             ),
-                             suffixIcon: Icon(Icons.search_sharp)),
+                        ExcludeSemantics(
+                            child: CheckboxListTile(
+                              title: const Text("Apartamento no Registrado"),
+                              contentPadding: EdgeInsets.all(1),
+                              value: checkedValue,
+                              onChanged: (newValue) {
+                                //_buscarApartamentoController = TextEditingController(text: "");
 
 
-                         maxSuggestionsInViewPort: 10,
+                                if(mounted){
 
-                         itemHeight: 40,
-                         onTap: (x) {
-                           FocusScope.of(context).requestFocus(  FocusNode());
-                           print(x);
+                                  setState(() {
+
+                                  });
+                                  newApt=false;
+
+                                  print(" $newApt");
+                                  _buscarApartamentoController = TextEditingController(text: "");
 
 
-                           _listApartamentos.forEach((apa) async {
-                             if (apa.name == _buscarApartamentoController.text) {
-                               _curretExtension=apa;
-                             }
-                           });
-                           setState(() {});
-                         },
-                       ), ),
+                                  checkedValue = newValue;
+                                  if(mounted){ setState(() {
+
+                                  });}
+                                  print('One second has passed.'); // Prints after 1 second.
+
+
+                                 
+                                }
+
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .trailing, //  <-- leading Checkbox
+                            )),
 
 
 
+                        Visibility(
+                          visible:true,
+                          child:Expanded(
+                            child: SearchField(
+                              suggestions: listaApartamentos,
 
 
-                        //SizedBox(height: screenHeight *0.01,),
-                        // nombre
+                              hint: 'Selecciona un apartamento',
+                              searchStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(0.8),
+                              ),
+                              validator: (x) {
+                                if (x.length == 0) {
+                                  _curretExtension = null;
+                                  return null;
+                                }
+                                print(x);
+                              /*  if (!listaApartamentos.contains(x) ||
+                                    x.isEmpty) {
+                                  return 'Dato no valido, Selecciona un valor';
+                                }*/
+
+                                return null;
+                              },
+                              hasOverlay:true,
+                              controller: _buscarApartamentoController,
+                              searchInputDecoration: InputDecoration(
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.black.withOpacity(0.8),
+                                    ),
+                                  ),
+                                  border: const OutlineInputBorder(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(15)),
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
+                                  suffixIcon: const Icon(Icons.search_sharp)),
+                              maxSuggestionsInViewPort: 10,
+                              itemHeight: 40,
+
+
+
+                              onTap: (x) {
+                                FocusScope.of(context).requestFocus(
+                                    FocusNode());
+                                print(x);
+
+                                _listApartamentos.forEach((apa) async {
+                                  if (apa.name ==
+                                      _buscarApartamentoController.text) {
+                                    _curretExtension = apa;
+                                  }
+                                });
+                                newApt=true;
+                                checkedValue  =false;
+
+                                print(" $newApt");
+
+
+                                setState(() {});
+                              },
+
+
+
+
+                            ),
+                          ),
+
+                        ),
+
+
                         formularios.campo_Texto(
                             currentFocus: _nombre,
                             nextFocus: _cedula,
@@ -216,7 +292,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                         formularios.campo_Texto_limit(
                             currentFocus: _telefono,
                             nextFocus: _placa,
-                            nombreController: _TelefononController,
+                            nombreController: _telefononController,
                             nombre: "Teléfono",
                             numeros: true,
                             limit: 10,
@@ -245,27 +321,29 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                       ),
                       Flexible(
                           child: RadioListTile(
-                        title: const Text('Empresa'),
-                        value: '2',
-                        contentPadding: EdgeInsets.zero,
-                        groupValue: _radioGroupValue,
-                        onChanged: (value) {
-                          setState(() {
-                            _radioGroupValue = value;
-                          });
-                        },
-                      )),
+                            title: const Text('Empresa'),
+                            value: '2',
+                            contentPadding: EdgeInsets.zero,
+                            groupValue: _radioGroupValue,
+                            onChanged: (value) {
+                              setState(() {
+                                _radioGroupValue = value;
+                              });
+                            },
+                          )),
                     ],
                   )),
 
               Container(
-                 height:_radioGroupValue == "1"?screenHeight * 0.12 : screenHeight * 0.35,
+                  height: _radioGroupValue == "1"
+                      ? screenHeight * 0.12
+                      : screenHeight * 0.35,
                   width: screenWidth * 0.9,
                   child: Column(
                     children: [
                       Visibility(
-                        visible:_radioGroupValue == "1"?false:true,
-                        child:    Expanded(
+                        visible: _radioGroupValue == "1" ? false : true,
+                        child: Expanded(
                           child: Row(
                             children: <Widget>[
                               formularios.campo_Texto(
@@ -275,11 +353,12 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                                   nombre: "Nombre "),
                             ],
                           ),
-                        ),  ),
+                        ),
+                      ),
 
                       Visibility(
-                        visible:_radioGroupValue == "1"?false:true,
-                        child:          Expanded(
+                        visible: _radioGroupValue == "1" ? false : true,
+                        child: Expanded(
                           child: Row(
                             children: <Widget>[
                               formularios.campo_Texto(
@@ -297,10 +376,10 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                                   nombre: "EPS "),
                             ],
                           ),
-                        ),  ),
+                        ),
+                      ),
 
                       // SizedBox(height: screenHeight * 0.015),
-
 
                       formularios.campo_Texto(
                           currentFocus: _placa,
@@ -323,16 +402,18 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                     },
                     icon: Icon(
                       Icons.add_a_photo,
-
                       color: _image != null ? Colors.green : Colors.grey,
                     ),
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
+                      MaterialStateProperty.all<Color>(Colors.white),
                       elevation: MaterialStateProperty.all<double>(5),
                       enableFeedback: true,
                       shape: MaterialStateProperty.all<OutlinedBorder>(
-                        const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0),)),
+                        const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.0),
+                            )),
                         //  alignment:Alignment.centerLeft
                       ),
                     ),
@@ -343,16 +424,17 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                     ),
                   )),
 
-              SizedBox( height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               //Botn guardar
               Container(
                   height: screenHeight * 0.085,
                   width: screenWidth,
-                  padding: const EdgeInsets.only(top: 10,bottom: 10),
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: MaterialButton(
-
                     shape: bordeBoton,
-                    child:const Text(
+                    child: const Text(
                       'Guardar',
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
@@ -360,13 +442,22 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                     color: colorButton,
                     textColor: Colors.white,
                     onPressed: () {
+                      Loads loads = new Loads(context);
                       if (_formKey.currentState.validate()) {
-                        registrarVisitas();
+
+                        if(!newApt && !checkedValue)
+                        {
+                          loads.Toast_Resull(1, "Selecciona una extensión o marca la casilla de  “Apartamento no registrado”  para guardar la visita.  ");
+                        } else{
+                          registrarVisitas();
+                        }
+
+
+
                       }
                     },
                   )),
             ],
-
           ),
         ),
       ),
@@ -401,35 +492,38 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   }
 
   registrarVisitas() async {
+
+    UserData userData =  UserData();
+    userData = await obtenerDataUser();
     Loads loads = new Loads(context);
     loads.Carga("Procesando...");
-    UserData userData = new UserData();
+
     userData = await obtenerDataUser();
     print(userData.apiToken);
     String token = userData.apiToken;
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd HH:MM').format(now);
 
-    FormData formData = new FormData.fromMap({
+    FormData formData = FormData.fromMap({
       "name": _nombreController.text,
-      "dni": _cedulaController.text,
-      "phone": _TelefononController.text,
+      "dni":checkedValue==false?  _cedulaController.text  :_cedulaController.text +"#${_buscarApartamentoController.text}" ,
+      "phone": _telefononController.text,
       "checkin": formattedDate,
       "plate": _placaController.text,
       "type": _radioGroupValue == "1" ? "singular" : "company",
       "company": _radioGroupValue == "1" ? "" : _nombreEmController.text,
       "arl": _radioGroupValue == "1" ? "" : _arlController.text,
       "eps": _radioGroupValue == "1" ? "" : _epsController.text,
-      "apartment": _curretExtension.name,
-      "admin_id": _curretExtension.adminId,
-      "picture":_image != null
+      "apartment":checkedValue==false? _curretExtension.name:"0",
+      "admin_id":   userData.adminId,
+      "picture": _image != null
           ? s_archivo.MultipartFile.fromFileSync(_image.path,
           filename: "foto1.png")
           : null
     });
 
     repp.Response response;
-    Dio dio = new Dio();
+    Dio dio = Dio();
     try {
       response = await dio.post(
         solicitudes_http.UrlBase + "/api/visits",
@@ -453,16 +547,17 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
         print("Desde respuest 200 " + response.toString());
         //Limpiar la panatalla
         _image = null;
-       formularios.Limpiar_textField(
+        formularios.Limpiar_textField(
             nombreController1: _nombreController,
-            nombreController2: _cedulaController ,
-            nombreController3: _TelefononController,
+            nombreController2: _cedulaController,
+            nombreController3: _telefononController,
             nombreController4: _placaController,
-         nombreController5: _nombreEmController,
-         nombreController6: _arlController ,
-         nombreController7: _epsController);
-
-
+            nombreController5: _nombreEmController,
+            nombreController6: _arlController,
+            nombreController7: _epsController);
+  _buscarApartamentoController.text="";
+                newApt=false;
+                checkedValue=false;
         loads.Toast_Resull(2, "La operación fue procesada con éxito.");
 
         setState(() {});
@@ -476,21 +571,24 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
     }
   }
 
-
-
   @override
   void initState() {
     super.initState();
-    solicitudes_http = new Solicitudes_http(context);
-    formularios = new Formularios(context: context);
-    solicitudes_http = new Solicitudes_http(context);
-    _cedulaController = new TextEditingController(text: "");
-    _TelefononController = new TextEditingController(text: "");
-    _placaController = new TextEditingController(text: "");
-    _nombreController = new TextEditingController(text: "");
+    solicitudes_http =   Solicitudes_http(context);
+    formularios =   Formularios(context: context);
+    solicitudes_http =   Solicitudes_http(context);
+    _cedulaController =   TextEditingController(text: "");
+    _telefononController =   TextEditingController(text: "");
+    _placaController =   TextEditingController(text: "");
+    _nombreController =   TextEditingController(text: "");
     getApartamentos();
   }
+  @override
+  void dispose() {
+    _buscarApartamentoController.dispose();
 
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Containerregistrar();

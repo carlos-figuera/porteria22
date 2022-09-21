@@ -1,31 +1,50 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:porteria/app/modelos/model_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future guardarDataUser({String dataUser}) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (dataUser != null) {
-      prefs.setString('user', dataUser);
 
+  final storage =   FlutterSecureStorage();
+
+
+// Read all values
+  //  Map<String, String> allValues = await storage.readAll();
+
+// Delete value
+  //   await storage.delete(key: "Home");
+
+// Delete all
+  //  await storage.deleteAll();
+
+  print(" guardando  datos del  usuario $dataUser");
+
+  if (dataUser != null) {
+
+      await storage.write(key: "user", value: dataUser );
 
   } else {
-      prefs.setString('user', null);
+
+      await storage.write(key: "user", value: null );
   }
 }
 
 Future<UserData> obtenerDataUser() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  UserData userData =   UserData();
 
+  UserData userData =   UserData();
+  final storage =   FlutterSecureStorage();
   try {
-    String Datos = prefs.getString('user').toString();
-    print(Datos);
-    var resBody = json.decode(Datos);
+
+
+    String value = await storage.read(key: "user");
+    print("  datos del  usuario ${value.toString()}");
+    var resBody = json.decode(value);
 
     userData = UserData.fromJson1(resBody);
   } catch (e) {
     userData = null;
+    print("  datos del  usuario ${e}");
   }
 
   return userData;
