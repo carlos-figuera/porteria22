@@ -33,7 +33,9 @@ class Formularios {
       String nombre,
       TextEditingController nombreController,
       bool fina,
-      bool numeros}) {
+      bool numeros,
+        Function(String number)onChangeText
+      }) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 1,horizontal:1 ),
@@ -43,7 +45,7 @@ class Formularios {
           onFieldSubmitted: (term) {
             fieldFocusChange(currentFocus, nextFocus);
           },
-          onChanged: (dato) {},
+          onChanged: onChangeText,
           decoration: InputDecoration(
               labelText: nombre,
 

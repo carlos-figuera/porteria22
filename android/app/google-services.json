@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "883122880540",
+    "project_id": "porteria-913e4",
+    "storage_bucket": "porteria-913e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883122880540:android:918bd464d12492741cdfd9",
+        "android_client_info": {
+          "package_name": "com.phenlinea.porteria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "883122880540-sh89jgqo6lsrp59c93o34m1djhelcnl1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAilQrqyxJE9FgEkxlP-stJCQCt6YARRRo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "883122880540-sh89jgqo6lsrp59c93o34m1djhelcnl1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

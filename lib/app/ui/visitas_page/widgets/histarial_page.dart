@@ -148,7 +148,7 @@ String nameAtp({String dni })
   String n= "";
   if(dni.contains("#")){
     List<String> ff= dni.split("#") ;
-     if(ff.length==0)
+     if(ff.isEmpty)
      {
        n= ff[0];
      } else{
@@ -157,12 +157,14 @@ String nameAtp({String dni })
   }
   return n;
 }
-  String DNIAtp({String dni })
+  String dniVisitor({String dni })
   {
     String n= "";
     if(dni.contains("#")){
       List<String> ff= dni.split("#") ;
       n= ff[0];
+    }else{
+      n= dni;
     }
     return n;
   }
@@ -276,7 +278,7 @@ String nameAtp({String dni })
 
                                                       child: textoItems(
                                                           texto:
-                                                           "APTO :  ${_listVisitas[position].extension.name }  ${nameAtp(dni:_listVisitas[position].dni )}  "  ,
+                                                           "APTO :${_listVisitas[position].extension.id==0?"":_listVisitas[position].extension.id }  ${nameAtp(dni:_listVisitas[position].dni )}  "  ,
                                                           tamano: 14,
                                                           colo: Colors.black54)),
                                                   Expanded(
@@ -288,7 +290,7 @@ String nameAtp({String dni })
                                                   Expanded(
                                                       child: textoItems(
                                                           texto:
-                                                              "Cedula :    ${DNIAtp(dni:_listVisitas[position].dni)}  "  ,
+                                                              "Cedula : ${dniVisitor(dni:_listVisitas[position].dni)}  "  ,
                                                           tamano: 14,
                                                           colo: Colors.black54)),
                                                   Expanded(

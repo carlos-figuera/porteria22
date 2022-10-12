@@ -22,7 +22,7 @@ class _NotificacionSmsPageState extends State<NotificacionSmsPage> {
   Solicitudes_http solicitudes_http;
   bool _carga = true;
   TextEditingController _buscarController = new TextEditingController();
-  var _radioGroupValue = '1';
+  var _radioGroupValue = '3';
 double alto=0.3;
 String selectApt;
   @override
@@ -40,7 +40,7 @@ String selectApt;
           texto,
           softWrap: true,
           style: TextStyle(
-              fontSize: tamano, fontWeight: FontWeight.w600, color: colo),
+              fontSize: tamano, fontWeight: FontWeight.w900, color: colo),
           textAlign: TextAlign.left,
         ));
   }
@@ -106,13 +106,13 @@ String selectApt;
                 //Notificaciones SMS
 
                 Container(
-                    height: screenHeight * (_radioGroupValue=="3"?0.54:0.3),
+                    height: screenHeight * (_radioGroupValue=="3"?0.42:0.3),
                     width: screenWidth,
                     child: Padding(
                       padding: EdgeInsets.all(screenHeight * 0.01),
                       child: Column(
                         children: [
-                          Container(
+                       /*   Container(
                               height: screenHeight * 0.08,
                               width: screenWidth * 1,
                               child: Row(
@@ -145,10 +145,10 @@ String selectApt;
                                       ),flex:3,
                                   ),
                                 ],
-                              )),
+                              )),*/
                           Expanded(
                               child: RadioListTile(
-                                title: Text('Encomienda'),
+                                title: Text('Notificar Encomienda'),
                                 value: '3',
                                 groupValue: _radioGroupValue,
                                 contentPadding: EdgeInsets.all(0),
@@ -166,37 +166,7 @@ String selectApt;
                               height: screenHeight * 0.22,
                               child: Column(
                                 children: [
-                                  Container(
-                                      height: screenHeight * 0.1,
-                                      width: screenWidth,
-                                      child: ListView.builder(
-                                          itemCount: _listApa.length,
-                                          padding: EdgeInsets.all(2.0),
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (context, position) {
-                                            _listApa.sort((b, a) => a.id.compareTo(b.id));
-                                            return   _listApa[position].estado==1
-                                                ? Container(
-                                              height: screenHeight * 0.23,
-                                              width: screenWidth * 0.4,
-                                              child:GestureDetector(child: Card(
-                                                margin: EdgeInsets.all(5.0),
-                                                elevation: 5,
-                                                shape:selectApt==_listApa[position].name? bordeBotonApatamento:bordeBoton ,
-                                                child: Center(
-                                                    child: textoItems(
-                                                        texto:
-                                                        "${_listApa[position].name}",
-                                                        tamano: 14,
-                                                        colo: Colors.black54)),
-                                              ) ,onTap: (){
-                                                selectApt=_listApa[position].name;
-                                                setState(() {
-                                                });
-                                              },),
-                                            )
-                                                : SizedBox();
-                                          })),
+
                                   ExcludeSemantics(
                                     child: Padding(
                                       padding: EdgeInsets.all(2.0),
@@ -237,16 +207,44 @@ String selectApt;
                                       ),
                                     ),
                                   ),
-
+                                  Container(
+                                      height: screenHeight * 0.1,
+                                      width: screenWidth,
+                                      child: ListView.builder(
+                                          itemCount: _listApa.length,
+                                          padding: const EdgeInsets.all(5.0),
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, position) {
+                                            _listApa.sort((b, a) => a.id.compareTo(b.id));
+                                            return   _listApa[position].estado==1
+                                                ? Container(
+                                              height: screenHeight * 0.23,
+                                              width: screenWidth * 0.4,
+                                              child:GestureDetector(child: Card(
+                                                margin: const EdgeInsets.all(5.0),
+                                                elevation: 5,
+                                                shape:selectApt==_listApa[position].name? bordeBotonApatamento:bordeBoton ,
+                                                child: Center(
+                                                    child: textoItems(
+                                                        texto:
+                                                        "${_listApa[position].name}",
+                                                        tamano: 18,
+                                                        colo: Colors.black54)),
+                                              ) ,onTap: (){
+                                                selectApt=_listApa[position].name;
+                                                setState(() {
+                                                });
+                                              },),
+                                            )
+                                                : SizedBox();
+                                          })),
                                 ],
                               )):Container(),
 
 
-
-
                            // Boton enviar
                           Container(
-                              height: screenHeight * 0.09,
+                              height: screenHeight * 0.08,
                               width: screenWidth,
                               padding:
                               EdgeInsets.only(top: screenHeight * 0.01),
@@ -254,7 +252,7 @@ String selectApt;
                                 disabledColor: Colors.grey,
                                 shape: bordeBoton,
                                 child: Row(
-                                  children: <Widget>[
+                                  children: const <Widget>[
                                     Expanded(
                                       child: Text(
                                         'ENVIAR SMS',

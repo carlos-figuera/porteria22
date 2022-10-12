@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:porteria/Util/widget_globales.dart';
+import 'package:porteria/app/modelos/MVisitas.dart';
 import 'package:porteria/app/modelos/M_apartamento.dart';
 import 'package:porteria/app/modelos/model_user.dart';
 import 'package:porteria/Util/Const.dart';
@@ -13,6 +15,7 @@ import 'package:porteria/Util/componentes/formularios/fomulario.dart';
 import 'package:dio/src/response.dart' as repp;
 import 'package:dio/src/multipart_file.dart' as s_archivo;
 import 'package:intl/intl.dart';
+
 import 'package:searchfield/searchfield.dart';
 
 class FormularioPageVisita extends StatefulWidget {
@@ -21,6 +24,9 @@ class FormularioPageVisita extends StatefulWidget {
 }
 
 class _FormularioPageVisitaState extends State<FormularioPageVisita> {
+  List<MVisitas> _listVisitas;
+  bool fotoEncontrada=false;
+  String  urlFoto="";
   double alto = 1;
   bool checkedValue = false;
   bool newApt = false;
@@ -40,7 +46,8 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   final TextEditingController _arlController = TextEditingController();
   final TextEditingController _epsController = TextEditingController();
 
-  TextEditingController _buscarApartamentoController = TextEditingController(text: "");
+  TextEditingController _buscarApartamentoController =
+      TextEditingController(text: "");
   final FocusNode _cedula = FocusNode();
   final FocusNode _nombre = FocusNode();
   final FocusNode _nombreApt = FocusNode();
@@ -60,8 +67,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
     var image = await _picker.pickImage(
         source: tipo == 1 ? ImageSource.gallery : ImageSource.camera);
 
-
-    _image = File( image.path );
+    _image = File(image.path);
     _image.length().then((len) {
       print("TAMANO foto camara 1  $len");
     });
@@ -69,9 +75,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   }
 
   Future<void> _Dialo_seleccion_foto() async {
-    final screenSize = MediaQuery
-        .of(context)
-        .size;
+    final screenSize = MediaQuery.of(context).size;
     return showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -106,6 +110,8 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
     );
   }
 
+  List<String> datoss = ["Primer", "segundo"];
+
   getApartamentos() async {
     var snapshot = await solicitudes_http.getData("/api/apartments");
     if (snapshot != null) {
@@ -116,11 +122,10 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
             data1.map((model) => MApartameto.fromJson(model)).toList();
         print(data1);
         lis_Extensiones = _listApartamentos
-            .map((item) =>
-            DropdownMenuItem(
-              child: Text(item.name),
-              value: item,
-            ))
+            .map((item) => DropdownMenuItem(
+                  child: Text(item.name),
+                  value: item,
+                ))
             .toList();
 
         _listApartamentos.forEach((apa) async {
@@ -128,26 +133,75 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
           print("Desde hasData  ${apa.name} ");
         });
 
-        if(mounted)
-        {
+        if (mounted) {
           setState(() {});
         }
-
       } else {
         setState(() {});
       }
     }
   }
 
+
+  gettData() async {
+    var snapshot = await solicitudes_http.getData("/api/visits");
+    _listVisitas =   [];
+    if (snapshot != null) {
+      if (snapshot["codigo"] == "200") {
+        var data1 = snapshot["data"] as List;
+        _listVisitas = data1.map((model) => MVisitas.fromJson(model)).toList();
+        print("Desde hasData  ${snapshot["data"]} ");
+        print("Desde hasData  ${snapshot["codigo"]} ");
+        print("Desde hasData  ${_listVisitas.length} ");
+        _listVisitas.sort((a, b) => a.id.compareTo(b.id));
+
+
+        if(mounted)
+        {
+          setState(() {});
+        }
+      } else {
+
+        setState(() {});
+      }
+    }
+  }
+
+
+  String DNIAtp({String dni })
+  {
+    String n= "";
+    if(dni.contains("#")){
+      List<String> ff= dni.split("#") ;
+      n= ff[0];
+    }
+    return n;
+  }
+
+
+  /* Iterable<String> filterClient({
+      String filter,
+    List<String>  data,
+    List<String>  listString,
+  }) {
+    List<String> response = [];
+
+    if (data != null) {
+      data.forEach((element) {
+      //  response.add(element.name);
+      });
+    } else {
+      response = listString ;
+    }
+
+    return response
+        .where((word) => word.toLowerCase().contains(filter.toLowerCase()));
+  }*/
   Widget Containerregistrar() {
-    final screenSize = MediaQuery
-        .of(context)
-        .size;
+    final screenSize = MediaQuery.of(context).size;
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
-    final screenOri = MediaQuery
-        .of(context)
-        .orientation;
+    final screenOri = MediaQuery.of(context).orientation;
     const screenPortrait = Orientation.portrait;
     return Container(
       child: SingleChildScrollView(
@@ -157,8 +211,8 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
             children: <Widget>[
               Container(
                   height: screenOri == screenPortrait
-                      ? screenHeight * 0.45
-                      : screenHeight * 0.45,
+                      ? screenHeight * 0.47
+                      : screenHeight * 0.47,
                   margin: EdgeInsets.only(top: screenHeight * 0.02),
                   child: Form(
                     key: _formKey,
@@ -166,48 +220,39 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                       children: <Widget>[
                         ExcludeSemantics(
                             child: CheckboxListTile(
-                              title: const Text("Apartamento no Registrado"),
-                              contentPadding: EdgeInsets.all(1),
-                              value: checkedValue,
-                              onChanged: (newValue) {
-                                //_buscarApartamentoController = TextEditingController(text: "");
+                          title: const Text("Apartamento no Registrado"),
+                          contentPadding: EdgeInsets.all(1),
+                          value: checkedValue,
+                          onChanged: (newValue) {
+                            //_buscarApartamentoController = TextEditingController(text: "");
 
+                            if (mounted) {
+                              setState(() {});
+                              newApt = false;
 
-                                if(mounted){
+                              print(" $newApt");
+                              _buscarApartamentoController =
+                                  TextEditingController(text: "");
 
-                                  setState(() {
+                              checkedValue = newValue;
+                              if (mounted) {
+                                setState(() {});
+                              }
+                              print(
+                                  'One second has passed.'); // Prints after 1 second.
 
-                                  });
-                                  newApt=false;
+                            }
+                          },
+                          controlAffinity: ListTileControlAffinity
+                              .trailing, //  <-- leading Checkbox
+                        )),
 
-                                  print(" $newApt");
-                                  _buscarApartamentoController = TextEditingController(text: "");
-
-
-                                  checkedValue = newValue;
-                                  if(mounted){ setState(() {
-
-                                  });}
-                                  print('One second has passed.'); // Prints after 1 second.
-
-
-                                 
-                                }
-
-                              },
-                              controlAffinity: ListTileControlAffinity
-                                  .trailing, //  <-- leading Checkbox
-                            )),
-
-
-
-                        Visibility(
-                          visible:true,
-                          child:Expanded(
+                       // const SizedBox(height : 15,),
+                        SizedBox(
+                          child: Visibility(
+                            visible: true,
                             child: SearchField(
                               suggestions: listaApartamentos,
-
-
                               hint: 'Selecciona un apartamento',
                               searchStyle: TextStyle(
                                 fontSize: 14,
@@ -219,14 +264,14 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                                   return null;
                                 }
                                 print(x);
-                              /*  if (!listaApartamentos.contains(x) ||
-                                    x.isEmpty) {
-                                  return 'Dato no valido, Selecciona un valor';
-                                }*/
+                                /*  if (!listaApartamentos.contains(x) ||
+                                        x.isEmpty) {
+                                      return 'Dato no valido, Selecciona un valor';
+                                    }*/
 
                                 return null;
                               },
-                              hasOverlay:true,
+                              hasOverlay: true,
                               controller: _buscarApartamentoController,
                               searchInputDecoration: InputDecoration(
                                   focusedBorder: OutlineInputBorder(
@@ -242,12 +287,8 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                                   suffixIcon: const Icon(Icons.search_sharp)),
                               maxSuggestionsInViewPort: 10,
                               itemHeight: 40,
-
-
-
                               onTap: (x) {
-                                FocusScope.of(context).requestFocus(
-                                    FocusNode());
+                                FocusScope.of(context).requestFocus(FocusNode());
                                 print(x);
 
                                 _listApartamentos.forEach((apa) async {
@@ -256,47 +297,153 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                                     _curretExtension = apa;
                                   }
                                 });
-                                newApt=true;
-                                checkedValue  =false;
+                                newApt = true;
+                                checkedValue = false;
 
                                 print(" $newApt");
 
-
                                 setState(() {});
                               },
-
-
-
-
                             ),
                           ),
+                        ),
+                        const SizedBox(height : 15,),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
 
+
+                                    //dni
+                                    formularios.campo_Texto(
+                                        currentFocus: _cedula,
+                                        nextFocus: _nombre,
+                                        nombreController: _cedulaController,
+                                        numeros: true,
+                                         onChangeText:(data)
+                                         {
+                                           _listVisitas.forEach((element) {
+                                             String cedula= DNIAtp(dni: element.dni );
+
+                                             if(data==cedula.trim())
+                                             {
+
+
+                                               if(cedula.isNotEmpty)
+                                               {
+                                                 print("${element.name}  ${element.dni}   $cedula   ");
+
+
+                                                 _nombreController.text=element.name;
+                                                 _telefononController.text=element.phone;
+                                                 _cedulaController.text=cedula;
+                                                 _nombreEmController.text=element.company.toString();
+                                                 _placaController.text=element.plate;
+                                                 fotoEncontrada=true;
+                                                 urlFoto=element.picture;
+                                               //  _image=null;
+                                                 setState(() {
+
+                                                 });
+                                               }
+
+
+
+
+                                             } else{
+                                               //_nombreController.text="";
+                                             //  _telefononController.text="";
+                                             //  _cedulaController.text="";
+                                           //  _nombreEmController.text="";
+                                              // _placaController.text="";
+                                              // fotoEncontrada=false;
+
+                                               setState(() {
+
+                                               });
+                                             }
+                                           });
+
+
+
+
+                                         } ,
+                                        nombre: "Cedula"),
+                                    const SizedBox(height : 15,),
+                                    formularios.campo_Texto(
+                                        currentFocus: _nombre,
+                                        nextFocus: _telefono,
+                                        nombreController: _nombreController,
+                                        nombre: "Nombre "),
+                                    const SizedBox(height : 15,),
+                                    //Teléfono
+                                    formularios.campo_Texto_limit(
+                                        currentFocus: _telefono,
+                                        nextFocus: _placa,
+                                        nombreController: _telefononController,
+                                        nombre: "Teléfono",
+                                        numeros: true,
+                                        limit: 10,
+                                        fina: true),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                         fotoEncontrada?   Container(
+
+                             width: screenWidth *0.36,
+                                // height: 150,
+                                child: Column(children: [
+
+                                  Expanded(
+                                    child: ClipRRect(
+                                      child:urlFoto==""?Image.asset("assets/cuenta.png") :imagen_cache_plantilla(url:urlFoto)          ,
+                                      borderRadius:
+                                      const BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                      height: screenHeight * 0.078,
+                                      width: screenWidth *0.35,
+                                      padding: const EdgeInsets.only( top: 6,bottom: 20),
+                                      child: MaterialButton(
+                                        shape: bordeBoton,
+                                        child: const Text(
+                                          'Limpiar',
+                                          style: TextStyle(fontSize: 16),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        color: disableButton,
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                           _nombreController.text="";
+                                            _telefononController.text="";
+                                           _cedulaController.text="";
+                                           _nombreEmController.text="";
+                                            _placaController.text="";
+                                            fotoEncontrada=false;
+                                           _image=null;
+                                            setState(() {
+
+                                            });
+                                        },
+                                      )),
+                                ],  )
+                              ):SizedBox(),
+
+
+                             // imagenVisiter( urlFoto: urlFoto,imagen:_image,h: screenHeight,onSelectPhoto: _Dialo_seleccion_foto   )
+
+                            ],
+                          ),
                         ),
 
 
-                        formularios.campo_Texto(
-                            currentFocus: _nombre,
-                            nextFocus: _cedula,
-                            nombreController: _nombreController,
-                            nombre: "Nombre "),
-
-                        //dni
-                        formularios.campo_Texto(
-                            currentFocus: _cedula,
-                            nextFocus: _telefono,
-                            nombreController: _cedulaController,
-                            numeros: true,
-                            nombre: "Cedula"),
-
-                        //Teléfono
-                        formularios.campo_Texto_limit(
-                            currentFocus: _telefono,
-                            nextFocus: _placa,
-                            nombreController: _telefononController,
-                            nombre: "Teléfono",
-                            numeros: true,
-                            limit: 10,
-                            fina: true),
                       ],
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                     ),
@@ -321,16 +468,16 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                       ),
                       Flexible(
                           child: RadioListTile(
-                            title: const Text('Empresa'),
-                            value: '2',
-                            contentPadding: EdgeInsets.zero,
-                            groupValue: _radioGroupValue,
-                            onChanged: (value) {
-                              setState(() {
-                                _radioGroupValue = value;
-                              });
-                            },
-                          )),
+                        title: const Text('Empresa'),
+                        value: '2',
+                        contentPadding: EdgeInsets.zero,
+                        groupValue: _radioGroupValue,
+                        onChanged: (value) {
+                          setState(() {
+                            _radioGroupValue = value;
+                          });
+                        },
+                      )),
                     ],
                   )),
 
@@ -392,6 +539,18 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                   )),
 
               //foto del visitante
+                _image != null
+                      ? Container(
+                      width: screenWidth * 0.9,
+                      height:screenHeight * 0.3 ,
+                      padding:EdgeInsets.symmetric(horizontal:screenWidth * 0.05 ) ,
+                      child: Image.file(
+                        _image,
+                        fit: BoxFit.contain,
+                      ))
+                      :SizedBox() ,
+
+              //foto del visitante
               Container(
                   height: screenHeight * 0.08,
                   width: screenWidth * 0.8,
@@ -406,14 +565,14 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                     ),
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.white),
+                          MaterialStateProperty.all<Color>(Colors.white),
                       elevation: MaterialStateProperty.all<double>(5),
                       enableFeedback: true,
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            )),
+                          Radius.circular(10.0),
+                        )),
                         //  alignment:Alignment.centerLeft
                       ),
                     ),
@@ -429,7 +588,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
               ),
               //Botn guardar
               Container(
-                  height: screenHeight * 0.085,
+                  height: screenHeight * 0.09,
                   width: screenWidth,
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: MaterialButton(
@@ -444,16 +603,12 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                     onPressed: () {
                       Loads loads = new Loads(context);
                       if (_formKey.currentState.validate()) {
-
-                        if(!newApt && !checkedValue)
-                        {
-                          loads.Toast_Resull(1, "Selecciona una extensión o marca la casilla de  “Apartamento no registrado”  para guardar la visita.  ");
-                        } else{
+                        if (!newApt && !checkedValue) {
+                          loads.Toast_Resull(1,
+                              "Selecciona una extensión o marca la casilla de  “Apartamento no registrado”  para guardar la visita.  ");
+                        } else {
                           registrarVisitas();
                         }
-
-
-
                       }
                     },
                   )),
@@ -492,8 +647,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   }
 
   registrarVisitas() async {
-
-    UserData userData =  UserData();
+    UserData userData = UserData();
     userData = await obtenerDataUser();
     Loads loads = new Loads(context);
     loads.Carga("Procesando...");
@@ -506,7 +660,12 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
 
     FormData formData = FormData.fromMap({
       "name": _nombreController.text,
-      "dni":checkedValue==false?  _cedulaController.text  :_cedulaController.text +"#${_buscarApartamentoController.text}" ,
+       "dni": checkedValue == false
+          ? _cedulaController.text
+          : _cedulaController.text + "#${_buscarApartamentoController.text}",
+
+
+
       "phone": _telefononController.text,
       "checkin": formattedDate,
       "plate": _placaController.text,
@@ -514,11 +673,11 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
       "company": _radioGroupValue == "1" ? "" : _nombreEmController.text,
       "arl": _radioGroupValue == "1" ? "" : _arlController.text,
       "eps": _radioGroupValue == "1" ? "" : _epsController.text,
-      "apartment":checkedValue==false? _curretExtension.name:"0",
-      "admin_id":   userData.adminId,
+      "apartment": checkedValue == false ? _curretExtension.name : "0",
+      "admin_id": userData.adminId,
       "picture": _image != null
           ? s_archivo.MultipartFile.fromFileSync(_image.path,
-          filename: "foto1.png")
+              filename: "foto1.png")
           : null
     });
 
@@ -555,9 +714,9 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
             nombreController5: _nombreEmController,
             nombreController6: _arlController,
             nombreController7: _epsController);
-  _buscarApartamentoController.text="";
-                newApt=false;
-                checkedValue=false;
+        _buscarApartamentoController.text = "";
+        newApt = false;
+        checkedValue = false;
         loads.Toast_Resull(2, "La operación fue procesada con éxito.");
 
         setState(() {});
@@ -569,26 +728,31 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
     } catch (error) {
       loads.Toast_Resull(1, "La operación ha fallado.");
     }
+
+    gettData();
   }
 
   @override
   void initState() {
     super.initState();
-    solicitudes_http =   Solicitudes_http(context);
-    formularios =   Formularios(context: context);
-    solicitudes_http =   Solicitudes_http(context);
-    _cedulaController =   TextEditingController(text: "");
-    _telefononController =   TextEditingController(text: "");
-    _placaController =   TextEditingController(text: "");
-    _nombreController =   TextEditingController(text: "");
+    solicitudes_http = Solicitudes_http(context);
+    formularios = Formularios(context: context);
+    solicitudes_http = Solicitudes_http(context);
+    _cedulaController = TextEditingController(text: "");
+    _telefononController = TextEditingController(text: "");
+    _placaController = TextEditingController(text: "");
+    _nombreController = TextEditingController(text: "");
     getApartamentos();
+    gettData();
   }
+
   @override
   void dispose() {
     _buscarApartamentoController.dispose();
 
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Containerregistrar();

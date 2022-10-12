@@ -8,6 +8,7 @@ import 'package:porteria/app/ui/apartamentos_page/apartamentos_page.dart';
 import 'package:porteria/app/ui/autorizados_page/autorizados_page.dart';
 import 'package:porteria/app/ui/home_page/Drawer.dart';
 import 'package:porteria/app/ui/home_page/ayuda.dart';
+import 'package:porteria/app/ui/notificacion_Whatsap_page/notificacion_whatsa.dart';
 import 'package:porteria/app/ui/notificacion_page/placa_notificacion.dart';
 import 'package:porteria/app/ui/placas_page/placa_page.dart';
 import 'package:porteria/app/ui/registrar_novedad_page/registrar_novedad_page.dart';
@@ -127,11 +128,31 @@ class _HomeState extends State<Home> {
 
                                 Expanded(
                                     child: GestureDetector(
-                                      child: Container(),
+                                      child: cardNoti(
+                                          ico:Icons.sms_sharp ,
+                                          title: "Notificaciones",h: screenHeight),
                                       onTap: () {
-
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    NotificaciobPage()));
                                       },
                                     )),
+
+                              /*  Expanded(
+                                    child: GestureDetector(
+                                      child: cardNoti(
+                                          ico:Icons.notification_add ,
+                                          title: "Notificaciones",h: screenHeight),
+                                      onTap: () {
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => NotificacionWhatsappPage()));
+                                      },
+                                    )),*/
                               ],
                             ),
                             flex: 3,
@@ -140,13 +161,19 @@ class _HomeState extends State<Home> {
                             child: Row(
                               children: <Widget>[
 
-                                Expanded(
+                               /* Expanded(
                                     child: GestureDetector(
-                                      child: Container(),
+                                      child: cardNoti(
+                                          ico:Icons.notification_add ,
+                                          title: "Notificaciones",h: screenHeight),
                                       onTap: () {
 
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => NotificacionWhatsappPage()));
                                       },
-                                    )),
+                                    )),*/
                                 Expanded(
                                     child: GestureDetector(
                                       child: Container(),

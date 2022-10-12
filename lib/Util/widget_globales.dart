@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -24,8 +27,99 @@ Widget imagen_cache_plantilla({String url, double h, double w}) {
     imageUrl: url,
     placeholder: (context, url) => Center(child: widget_Cargando()),
     errorWidget: (context, url, error) => Icon(Icons.error),
-    fit: BoxFit.cover,
+    fit: BoxFit.fill,
+  );}
+
+
+Widget imagenVisiter({String urlFoto,File imagen,double h,   Function onSelectPhoto, Function onCleatForm  }) {
+  return Container(
+      width: 150,
+      // height: 150,
+      child: Column(children: [
+        
+         Visibility(
+           visible:(urlFoto=="" && imagen==null )?true:false,
+             child: GestureDetector(
+               onTap:onSelectPhoto ,
+               child: Icon(
+                 Icons.add_a_photo_rounded,
+                 size: h * 0.15,
+           color: colorButton,),
+             )
+         ),
+        Visibility(
+            visible:(urlFoto=="")?false:true,
+            child:  Expanded(
+              child: ClipRRect(
+                child:urlFoto==""?Image.asset("assets/cuenta.png") :imagen_cache_plantilla(url:urlFoto)          ,
+                borderRadius:
+                const BorderRadius.all(
+                  Radius.circular(5),
+                ),
+              ),
+            ),
+        ),
+
+        Visibility(
+          visible:(  imagen!=null )?true:false,
+          child:  Expanded(
+            child: ClipRRect(
+              child: Image.file(imagen,fit: BoxFit.fitWidth,)          ,
+              borderRadius:
+              const BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
+          ),
+        ),
+
+        Visibility(
+          visible:(urlFoto=="" && imagen==null )?false:true,
+          child: Container(
+              height: h*0.078,
+              width: 140,
+              padding: const EdgeInsets.only( top: 6,bottom: 2),
+              child:Row(children: [
+                Expanded(
+                  child: CircleAvatar(
+                    backgroundColor:disableButton ,
+                    radius:h*0.09 ,
+                    child: IconButton(
+                      onPressed: () {
+                        //OnPressed Logic
+                      },
+
+                      icon:   const Icon(Icons.delete,color:Colors.white  ),
+
+
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: CircleAvatar(
+                    backgroundColor:colorButton ,
+                    radius:h*0.09 ,
+                    child: IconButton(
+                      onPressed: onSelectPhoto,
+
+                      icon:   const Icon(Icons.add_a_photo_rounded,color:Colors.white  ),
+
+
+                    ),
+                  ),
+                ),
+              ],
+
+               mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
+              ) ),
+        ),
+      ],  )
   );
+
+
+
+
+
 }
 
 
