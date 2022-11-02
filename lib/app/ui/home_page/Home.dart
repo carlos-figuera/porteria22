@@ -126,7 +126,7 @@ class _HomeState extends State<Home> {
                                       },
                                     )),
 
-                                Expanded(
+                               /* Expanded(
                                     child: GestureDetector(
                                       child: cardNoti(
                                           ico:Icons.sms_sharp ,
@@ -138,9 +138,9 @@ class _HomeState extends State<Home> {
                                                 builder: (context) =>
                                                     NotificaciobPage()));
                                       },
-                                    )),
+                                    )),*/
 
-                              /*  Expanded(
+                               Expanded(
                                     child: GestureDetector(
                                       child: cardNoti(
                                           ico:Icons.notification_add ,
@@ -152,7 +152,7 @@ class _HomeState extends State<Home> {
                                             MaterialPageRoute(
                                                 builder: (context) => NotificacionWhatsappPage()));
                                       },
-                                    )),*/
+                                    )),
                               ],
                             ),
                             flex: 3,

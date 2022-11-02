@@ -231,14 +231,16 @@ Widget sesion_expirada(double alto, BuildContext context) {
             ),
           )),
           ExcludeSemantics(
-              child: FlatButton(
+              child: TextButton(
             onPressed: () {
               guardarDataUser(dataUser: null);
               Navigator.pushReplacementNamed(context, "login_inquilino");
             },
-            child: Text("Aceptar"),
-            color: Colors.blue,
-            textColor: Colors.white,
+            child: const Text("Aceptar"),
+
+
+           // color: Colors.blue,
+            //textColor: Colors.white,
           ))
         ],
       ),

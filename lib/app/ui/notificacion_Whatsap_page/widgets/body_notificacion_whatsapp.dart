@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,16 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:porteria/Util/Const.dart';
 import 'package:porteria/Util/Load.dart';
+import 'package:porteria/Util/Offline.dart';
 import 'package:porteria/Util/Solicitudes_http.dart';
 import 'package:porteria/Util/widget_globales.dart';
 import 'package:porteria/app/modelos/M_apartamento.dart';
 import 'package:porteria/app/modelos/M_extensiones.dart';
-
+import 'package:dio/src/response.dart' as repp;
+import 'package:dio/src/multipart_file.dart' as s_archivo;
 import 'package:searchfield/searchfield.dart';
+
+import '../../../modelos/model_user.dart';
 
 class BodyNotificacionaWhatsa extends StatefulWidget {
   const BodyNotificacionaWhatsa({Key key}) : super(key: key);
@@ -27,8 +32,7 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
   final storage = FirebaseStorage.instance;
   Solicitudes_http solicitudes_http;
   bool _carga = false;
-  TextEditingController _buscarController = new TextEditingController();
-  var _radioGroupValue = '1';
+
   double alto = 0.3;
   String selectApt;
 
@@ -43,26 +47,8 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
 
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _nombreAptController = TextEditingController();
-  TextEditingController _cedulaController = TextEditingController();
-  TextEditingController _telefononController = TextEditingController();
-  TextEditingController _placaController = TextEditingController();
-  final TextEditingController _nombreEmController = TextEditingController();
-  final TextEditingController _arlController = TextEditingController();
-  final TextEditingController _epsController = TextEditingController();
-
-  TextEditingController _buscarApartamentoController =
+  final TextEditingController _buscarApartamentoController =
       TextEditingController(text: "");
-  final FocusNode _cedula = FocusNode();
-  final FocusNode _nombre = FocusNode();
-  final FocusNode _nombreApt = FocusNode();
-  final FocusNode _telefono = FocusNode();
-  final FocusNode _placa = FocusNode();
-  final FocusNode _nombreEm = FocusNode();
-  final FocusNode _arl = FocusNode();
-  final FocusNode _eps = FocusNode();
-  final FocusNode _falso = FocusNode();
 
   File _image;
 
@@ -84,7 +70,7 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
   void initState() {
     super.initState();
     solicitudes_http = new Solicitudes_http(context);
-    _listApa = new List();
+    _listApa = [];
     getApartamentos();
   }
 
@@ -100,18 +86,64 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
         ));
   }
 
-  setNotificacion({String namePara, String dat, String ur}) async {
-    var snapshot = await solicitudes_http.enivarNotificacion(
-        nameParam: namePara, data: dat, url: ur);
-    if (snapshot != null) {
-      if (snapshot["codigo"] == "200") {
-        var data1 = snapshot["data"];
+  notifyDelivery() async {
+    UserData userData = UserData();
+    userData = await obtenerDataUser();
+    Loads loads = new Loads(context);
+    loads.Carga("Procesando...");
+
+    userData = await obtenerDataUser();
+    //  print(userData.apiToken);
+    String token = userData.apiToken;
+
+    FormData formData = FormData.fromMap({
+      "media": _image != null
+          ? s_archivo.MultipartFile.fromFileSync(_image.path,
+              filename: "foto1.png")
+          : null
+    });
+
+    repp.Response response;
+    Dio dio = Dio();
+    try {
+      response = await dio.post(
+        solicitudes_http.UrlBase +
+            "/api/extensions/${selectApt}/delivery",
+        data: await formData,
+        options: Options(
+          headers: {
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.authorizationHeader: "Bearer $token"
+          },
+        ),
+        onSendProgress: (received, total) {
+          if (total != -1) {
+            print((received / total * 100).toStringAsFixed(0) + "%");
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        loads.cerrar();
+
+        print("Desde respuest 200 " + response.toString());
+        //Limpiar la panatalla
+        _image = null;
+
+        selectApt = null;
+        newApt = false;
+        checkedValue = false;
+        loads.Toast_Resull(2, "La operación fue procesada con éxito.");
+        _buscarApartamentoController.clear();
         setState(() {});
-      } else {
-        _carga = false;
-        print("Desde enviar notificacion  ${snapshot["codigo"]} ");
-        setState(() {});
+      } else if (response.statusCode >= 400) {
+        loads.cerrar();
+        print("Desde respuest 200 " + response.statusCode.toString());
+        loads.Toast_Resull(1, "La operación ha fallado.");
       }
+    } catch (error) {
+      loads.cerrar();
+      loads.Toast_Resull(1, "La operación ha fallado.");
     }
   }
 
@@ -220,11 +252,12 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
                                   if (apa.name ==
                                       _buscarApartamentoController.text) {
                                     curretExtension = apa;
+                                    selectApt = curretExtension.id.toString();
                                     checkedValue = true;
                                   }
                                 });
 
-                                print(" $newApt");
+                                print(" ${curretExtension.name}");
 
                                 setState(() {});
                               },
@@ -239,7 +272,16 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
                             visible: checkedValue,
                             child: Container(
                               child: Column(children: [
-                                Container(
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Extensión seleccionada",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900),
+                                  ),
+                                ),
+                               /* Container(
                                   height: screenHeight * 0.1,
                                   width: screenWidth,
                                   //   color: Colors.blue,
@@ -249,11 +291,11 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
                                     ExcludeSemantics(
                                         child: Text(
                                       "${curretExtension.name}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w900),
                                     )),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Expanded(
                                       child: ListView.builder(
                                           itemCount:
@@ -274,7 +316,7 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
                                           }),
                                     )
                                   ]),
-                                ),
+                                ),*/
 
                                 //foto del visitante
                                 Container(
@@ -293,15 +335,16 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
                                               Positioned(
                                                 child: CircleAvatar(
                                                   backgroundColor: Colors.white,
-                                                  radius : screenWidth * 0.085,
+                                                  radius: screenWidth * 0.085,
                                                   child: IconButton(
                                                       onPressed: () {
                                                         getImage();
                                                       },
-
                                                       icon: Icon(
-                                                        Icons.add_a_photo_rounded,
-                                                        size: screenWidth * 0.075,
+                                                        Icons
+                                                            .add_a_photo_rounded,
+                                                        size:
+                                                            screenWidth * 0.07,
                                                         color: colorButton,
                                                       )),
                                                 ),
@@ -316,51 +359,9 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
                                             },
                                             icon: Icon(
                                               Icons.add_a_photo_rounded,
-                                              size: screenWidth * 0.4,
+                                              size: screenWidth * 0.3,
                                               color: colorButton,
                                             ))),
-                                //foto del visitante
-                                /* Container(
-                                    height: screenHeight * 0.08,
-                                    width: screenWidth * 0.95,
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: ElevatedButton.icon(
-                                      onPressed: () {
-                                        getImage();
-                                      },
-                                      icon: Icon(
-                                        Icons.add_a_photo,
-                                        color: _image != null
-                                            ? Colors.green
-                                            : Colors.grey,
-                                      ),
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.white),
-                                        elevation:
-                                            MaterialStateProperty.all<double>(
-                                                5),
-                                        enableFeedback: true,
-                                        shape: MaterialStateProperty.all<
-                                            OutlinedBorder>(
-                                          const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0),
-                                          )),
-                                          //  alignment:Alignment.centerLeft
-                                        ),
-                                      ),
-                                      label: Text(
-                                        _image != null
-                                            ? "Foto adjuntada"
-                                            : "Foto del visitante",
-                                        style: TextStyle(
-                                            color: _image != null
-                                                ? Colors.green
-                                                : Colors.grey),
-                                      ),
-                                    )),*/
                               ]),
                               height: screenHeight * 0.42,
                               width: double.infinity,
@@ -388,7 +389,15 @@ class _BodyNotificacionaWhatsaState extends State<BodyNotificacionaWhatsa> {
                               ),
                               color: colorButton,
                               textColor: Colors.white,
-                              onPressed: () async {},
+                              onPressed: () {
+                                Loads loads =   Loads(context);
+                                if (selectApt != null) {
+                                  notifyDelivery();
+                                } else {
+                                  loads.Toast_Resull(
+                                      1, " Debes seleccionar una extensión.");
+                                }
+                              },
                             )),
                       ],
                     ))));

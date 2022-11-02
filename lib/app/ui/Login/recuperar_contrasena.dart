@@ -72,7 +72,7 @@ class Recuperar_contrasenaState extends State<Recuperar_contrasena> {
         centerTitle: true,
       ),
       body: Stack(
-        overflow: Overflow.clip,
+       // overflow: Overflow.clip,
         children: <Widget>[
           SingleChildScrollView(
             child: Container(

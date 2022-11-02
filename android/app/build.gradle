@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -56,9 +56,9 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.phenlinea.porteria"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 20
-        versionName '1.5.3'
+        targetSdkVersion 33
+        versionCode 22
+        versionName '1.5.5'
         multiDexEnabled true
 
     }
