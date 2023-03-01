@@ -175,6 +175,9 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
       List<String> ff= dni.split("#") ;
       n= ff[0];
     }
+    else{
+      n= dni;
+    }
     return n;
   }
 
@@ -324,7 +327,11 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                                         numeros: true,
                                          onChangeText:(data)
                                          {
-                                           _listVisitas.forEach((element) {
+                                           print("$data     ");
+                                           print(_listVisitas.length.toString());
+
+                                           for (var element in _listVisitas) {
+                                             print("${element.dni}");
                                              String cedula= DNIAtp(dni: element.dni );
 
                                              if(data==cedula.trim())
@@ -364,7 +371,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
 
                                                });
                                              }
-                                           });
+                                           }
 
 
 

@@ -169,6 +169,8 @@ class Solicitudes_http {
           "codigo": response.statusCode.toString(),
           "data": decodedResp["data"]
         };
+
+        print(decodedResp["data"]);
       } else if (response.statusCode == 401) {
         Map<String, dynamic> decodedResp = jsonDecode(response.body);
         //  loads.cerrar();

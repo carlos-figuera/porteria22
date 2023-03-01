@@ -21,7 +21,7 @@ class MNovedad {
   this.estado
   });
 
-  int id;
+  dynamic id;
   int read;
   String description;
   List<Picture> pictures;
@@ -31,13 +31,13 @@ class MNovedad {
   List<String> picturesUrl;
  int estado;
   factory MNovedad.fromJson(Map<String, dynamic> json, int estado) => MNovedad(
-    id: json["id"],
-    read: json["read"],
-    description: json["description"],
+    id: json["id"]??"",
+    read: json["read"]??0,
+    description: json["description"]??"",
     pictures: List<Picture>.from(json["pictures"].map((x) => Picture.fromJson(x))),
-    porteriaId: json["porteria_id"],
-    createdAt: DateTime.parse(json["created_at"]),
-    excerpt: json["excerpt"],
+    porteriaId: json["porteria_id"]??"",
+    createdAt: DateTime.parse(json["created_at"])??DateTime.now(),
+    excerpt: json["excerpt"]??"",
     estado:  estado,
     picturesUrl: List<String>.from(json["pictures_url"].map((x) => x)),
   );
@@ -64,8 +64,8 @@ class Picture {
   String path;
 
   factory Picture.fromJson(Map<String, dynamic> json) => Picture(
-    url: json["url"],
-    path: json["path"],
+    url: json["url"]??"",
+    path: json["path"]??"",
   );
 
   Map<String, dynamic> toJson() => {

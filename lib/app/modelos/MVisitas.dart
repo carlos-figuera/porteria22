@@ -30,7 +30,7 @@ class MVisitas {
    this.estado
   });
 
-  int id;
+  dynamic id;
   String name;
   String dni;
   String phone;
@@ -90,11 +90,11 @@ class Extension {
   this.name,
   });
 
-  int id;
+  dynamic id;
   String name;
 
   factory Extension.fromJson(Map<String, dynamic> json) => Extension(
-    id: json["id"]??0,
+    id: json["id"]??"",
     name: json["name"]??"",
   );
 
