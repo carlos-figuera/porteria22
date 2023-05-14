@@ -239,7 +239,7 @@ class _ApartamentosPageState extends State<ApartamentosPage>
                 textoItems(name: "Cuadro util:", texto: " No"),
                 textoItems(
                     name: "Numero de Mascotas:",
-                    texto: listApartamentos?.petsCount),
+                    texto: listApartamentos.petsCount.toString()),
                 textoItems(name: "Placa:", texto: listApartamentos?.plates),
               ],
               mainAxisAlignment: MainAxisAlignment.spaceAround,

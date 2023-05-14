@@ -21,7 +21,7 @@ class UserData {
   int  hasDeposit;
   String  userDataEmail;
   String  apiToken;
-  String  adminId;
+  int  adminId;
 
   UserData({
    this.id,
@@ -44,23 +44,23 @@ class UserData {
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) => UserData(
-    id: json["id"],
-    email: json["_email"],
-    password: json["_password"],
-    userDataPassword: json["password"],
-    name: json["name"],
-    phone1: json["phone_1"],
-    phone2: json["phone_2"],
-    phone3: json["phone_3"],
-    phone4: json["phone_4"],
-    ownerPhone: json["owner_phone"],
-    petsCount: json["pets_count"],
-    parkingNumber1: json["parking_number1"],
-    parkingNumber2: json["parking_number2"],
-    hasDeposit: json["has_deposit"],
-    userDataEmail: json["email"],
-    apiToken: json["api_token"],
-    adminId: json["admin_id"],
+    id: json["id"]??0,
+    email: json["_email"]??"",
+    password: json["_password"]??"",
+    userDataPassword: json["password"]??"",
+    name: json["name"]??"",
+    phone1: json["phone_1"]??"",
+    phone2: json["phone_2"]??"",
+    phone3: json["phone_3"]??"",
+    phone4: json["phone_4"]??"",
+    ownerPhone: json["owner_phone"]??"",
+    petsCount: json["pets_count"]??"",
+    parkingNumber1: json["parking_number1"]??"",
+    parkingNumber2: json["parking_number2"]??"",
+    hasDeposit: json["has_deposit"]??0,
+    userDataEmail: json["email"]??"",
+    apiToken: json["api_token"]??"",
+    adminId: json["admin_id"]??0,
   );
 
 

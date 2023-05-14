@@ -26,20 +26,20 @@ class MApartameto {
   int id;
   String name;
   String parkingNumbersStr;
-  String petsCount;
+  int petsCount;
   String plates;
-  String adminId;
+  int adminId;
   int estado;
   List<Resident> residents;
   List<Visitor> visitors;
 
   factory MApartameto.fromJson(Map<String, dynamic> json ) => MApartameto(
-    id: json["id"],
-    name: json["name"],
+    id: json["id"]??0,
+    name: json["name"]??"",
     parkingNumbersStr: json["parking_numbers_str"],
-    petsCount: json["pets_count"],
-    plates: json["plates"],
-    adminId: json["admin_id"],
+    petsCount: json["pets_count"]??0,
+    plates: json["plates"]??"",
+    adminId: json["admin_id"]??0,
     residents: List<Resident>.from(json["residents"].map((x) => Resident.fromJson(x))),
     visitors: List<Visitor>.from(json["visitors"].map((x) => Visitor.fromJson(x))),
      estado: 1
@@ -73,28 +73,28 @@ class Resident {
   });
 
   String name;
-  String age;
+  int age;
   String dni;
   int isOwner;
   int isResident;
-  String extensionId;
+  int extensionId;
   int id;
   int isAuthorized;
   int disability;
   String card;
   int estado;
   factory Resident.fromJson(Map<String, dynamic> json) => Resident(
-    name: json["name"],
-    age: json["age"],
-    dni: json["dni"],
-    isOwner: json["is_owner"],
-    isResident: json["is_resident"],
-    extensionId: json["extension_id"],
-    id: json["id"],
+    name: json["name"]??"",
+    age: json["age"]??0,
+    dni: json["dni"]??"",
+    isOwner: json["is_owner"]??0,
+    isResident: json["is_resident"]??0,
+    extensionId: json["extension_id"]??0,
+    id: json["id"]??0,
     estado: 1,
-    isAuthorized: json["is_authorized"],
-    disability: json["disability"],
-    card: json["card"] == null ? null : json["card"],
+    isAuthorized: json["is_authorized"]??0,
+    disability: json["disability"]??0,
+    card: json["card"]??"",
   );
 
   Map<String, dynamic> toJson() => {

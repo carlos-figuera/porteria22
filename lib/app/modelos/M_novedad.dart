@@ -21,21 +21,21 @@ class MNovedad {
   this.estado
   });
 
-  dynamic id;
+  int id;
   int read;
   String description;
   List<Picture> pictures;
-  String porteriaId;
+  int porteriaId;
   DateTime createdAt;
   String excerpt;
   List<String> picturesUrl;
  int estado;
   factory MNovedad.fromJson(Map<String, dynamic> json, int estado) => MNovedad(
-    id: json["id"]??"",
+    id: json["id"]??0,
     read: json["read"]??0,
     description: json["description"]??"",
     pictures: List<Picture>.from(json["pictures"].map((x) => Picture.fromJson(x))),
-    porteriaId: json["porteria_id"]??"",
+    porteriaId: json["porteria_id"]??0,
     createdAt: DateTime.parse(json["created_at"])??DateTime.now(),
     excerpt: json["excerpt"]??"",
     estado:  estado,

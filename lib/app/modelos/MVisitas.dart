@@ -43,24 +43,24 @@ class MVisitas {
   String checkin;
   String checkout;
   Extension extension;
-  String adminId;
+  int adminId;
   String picture;
   int estado;
   factory MVisitas.fromJson(Map<String, dynamic> json) => MVisitas(
-    id: json["id"],
-    name: json["name"]!=null?json["name"]:"",
-    dni: json["dni"]!=null?json["dni"]:"",
-    phone: json["phone"]!=null?json["phone"]:"",
-    type: json["type"]!=null?json["type"]:"",
-    company: json["company"]!=null?json["company"]:"",
-    arl: json["arl"]!=null?json["arl"]:"",
-    eps: json["eps"]!=null?json["eps"]:"",
-    arlEps: json["arl_eps"]!=null?json["arl_eps"]:"",
-    plate: json["plate"]!=null?json["plate"]:"",
+    id: json["id"]??0,
+    name:  json["name"]??"",
+    dni: json["dni"]??"",
+    phone: json["phone"]??"",
+    type: json["type"]??"",
+    company: json["company"]??"",
+    arl: json["arl"]??"",
+    eps: json["eps"]??"",
+    arlEps: json["arl_eps"]??"",
+    plate: json["plate"]??"",
     checkin:json["checkin"]!=null? DateFormat('yyyy-MM-dd').format(DateTime.parse(json["checkin"]) )  :"",
     checkout: json["checkout"]!=null? DateFormat('yyyy-MM-dd HH:MM').format(DateTime.parse(json["checkout"]) )  :"",
     extension:json["extension"]==null?Extension(id: 0,name:""): Extension.fromJson(json["extension"]),
-    adminId: json["admin_id"]??"",
+    adminId: json["admin_id"]??0,
     picture:json["picture"],
     estado: 1
   );

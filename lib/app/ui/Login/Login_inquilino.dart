@@ -63,11 +63,7 @@ class _LoginPageState extends State<LoginPage> {
 
   }
 
- Login() async {
-
-
-
-
+ login() async {
    if (_formKey.currentState.validate()) {
       print(_passwordController.text);
       var dm = await solicitudesHttp.login_usuario1(
@@ -77,6 +73,8 @@ class _LoginPageState extends State<LoginPage> {
           deciveToken: "");
       if (dm != null) {
         if (dm["ok"] == true) {
+          print("Codigo respuesta ${dm["data"]}");
+
           Map<String, dynamic> decodedResp = dm["data"];
           guardarDataUser(dataUser:jsonEncode(decodedResp) );
           UserData userData =  UserData();
@@ -167,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                       minWidth: MediaQuery.of(context).size.width,
                       height: scrreH * 0.08,
                       onPressed: () async {
-                     Login();
+                     login();
 
 
                       },

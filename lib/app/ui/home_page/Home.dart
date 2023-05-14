@@ -48,8 +48,8 @@ class _HomeState extends State<Home> {
     UserData userData =   UserData();
     userData = await obtenerDataUser();
 
-    nombreUnidad=userData.name!=null?userData.name:"";
-    Future.delayed( Duration(seconds:2 ),);
+    nombreUnidad=userData.name ?? "";
+    Future.delayed( const Duration(seconds:2 ),);
     setState(() {
     });
   }
