@@ -254,7 +254,7 @@ String nameAtp({String dni })
                                             //foto del visitante
                                            // assets/cuenta.png
                                             Container(
-                                            width:screenWidth * 0.25,
+                                            width:screenWidth * 0.30,
                                             height: screenHeight* 0.25,
                                               child: ClipRRect(
                                                 child:_listVisitas[position].picture==""?Image.asset("assets/cuenta.png") :imagen_cache_plantilla(url: _listVisitas[position].picture)          ,

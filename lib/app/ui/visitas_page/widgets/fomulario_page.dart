@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:porteria/Util/widget_globales.dart';
 import 'package:porteria/app/modelos/MVisitas.dart';
-import 'package:porteria/app/modelos/M_apartamento.dart';
+import 'package:porteria/app/modelos/MVisitor.dart';
+
 import 'package:porteria/app/modelos/model_user.dart';
 import 'package:porteria/Util/Const.dart';
 import 'package:porteria/Util/Load.dart';
@@ -17,6 +18,8 @@ import 'package:dio/src/multipart_file.dart' as s_archivo;
 import 'package:intl/intl.dart';
 
 import 'package:searchfield/searchfield.dart';
+
+import '../../../modelos/M_apartamento.dart';
 
 class FormularioPageVisita extends StatefulWidget {
   @override
@@ -46,8 +49,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   final TextEditingController _arlController = TextEditingController();
   final TextEditingController _epsController = TextEditingController();
 
-  TextEditingController _buscarApartamentoController =
-      TextEditingController(text: "");
+
   final FocusNode _cedula = FocusNode();
   final FocusNode _nombre = FocusNode();
   final FocusNode _nombreApt = FocusNode();
@@ -57,6 +59,8 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   final FocusNode _arl = FocusNode();
   final FocusNode _eps = FocusNode();
   final FocusNode _falso = FocusNode();
+  Visitors visitor=Visitors( id: 0,phone: "",name: "",type: "",arl: "",arlEps: "", company: "",eps: "",picture: "",plate: "",  dni:"") ;
+
 
   File _image;
   var _radioGroupValue = '1';
@@ -166,20 +170,67 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
       }
     }
   }
+  getVisitor({   String dni}) async {
+    var snapshot = await solicitudes_http.getVisitor(url1: "/api/visitors?dni=$dni");
+
+    if (snapshot != null) {
+      if (snapshot["codigo"] == "200") {
+        var data1 = snapshot["data"]  ;
+        visitor =Visitors.fromJson(data1) ;
+        print("Desde hasData  ${snapshot["data"]} ");
+
+        if(mounted)
+        {
+          setState(() {});
+        }
+        if(dni==visitor.dni)
+        {
 
 
-  String DNIAtp({String dni })
-  {
-    String n= "";
-    if(dni.contains("#")){
-      List<String> ff= dni.split("#") ;
-      n= ff[0];
+          if(visitor.dni.isNotEmpty)
+          {
+            print("${visitor.name}  ${visitor.dni}     ");
+
+
+            _nombreController.text=visitor.name;
+            _telefononController.text=visitor.phone;
+            _cedulaController.text=visitor.dni;
+            _nombreEmController.text=visitor.company.toString();
+            _placaController.text=visitor.plate;
+            fotoEncontrada=true;
+            urlFoto=visitor.picture;
+            //  _image=null;
+            setState(() {
+
+            });
+          }
+
+
+
+
+        } else{
+          //_nombreController.text="";
+          //  _telefononController.text="";
+          //  _cedulaController.text="";
+          //  _nombreEmController.text="";
+          // _placaController.text="";
+          // fotoEncontrada=false;
+
+          setState(() {
+
+          });
+
+        }
+
+      } else {
+
+        setState(() {});
+      }
     }
-    else{
-      n= dni;
-    }
-    return n;
   }
+
+
+
 
 
 
@@ -224,59 +275,17 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                                         nextFocus: _nombre,
                                         nombreController: _cedulaController,
                                         numeros: true,
-                                         onChangeText:(data)
+                                         onChangeText:(dni)
                                          {
-                                           print("$data     ");
-                                           print(_listVisitas.length.toString());
-
-                                           for (var element in _listVisitas) {
-                                             print("${element.dni}");
-                                             String cedula= DNIAtp(dni: element.dni );
-
-                                             if(data==cedula.trim())
-                                             {
+                                           print("$dni     ");
 
 
-                                               if(cedula.isNotEmpty)
-                                               {
-                                                 print("${element.name}  ${element.dni}   $cedula   ");
-
-
-                                                 _nombreController.text=element.name;
-                                                 _telefononController.text=element.phone;
-                                                 _cedulaController.text=cedula;
-                                                 _nombreEmController.text=element.company.toString();
-                                                 _placaController.text=element.plate;
-                                                 fotoEncontrada=true;
-                                                 urlFoto=element.picture;
-                                               //  _image=null;
-                                                 setState(() {
-
-                                                 });
-                                               }
-
-
-
-
-                                             } else{
-                                               //_nombreController.text="";
-                                             //  _telefononController.text="";
-                                             //  _cedulaController.text="";
-                                           //  _nombreEmController.text="";
-                                              // _placaController.text="";
-                                              // fotoEncontrada=false;
-
-                                               setState(() {
-
-                                               });
-                                             }
-                                           }
-
-
-
+                                           getVisitor(dni: dni);
 
                                          } ,
                                         nombre: "Cedula"),
+
+
                                     const SizedBox(height : 15,),
                                     formularios.campo_Texto(
                                         currentFocus: _nombre,
@@ -333,6 +342,8 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                                            _nombreEmController.text="";
                                             _placaController.text="";
                                             fotoEncontrada=false;
+                                            visitor.id=0;
+                                            _nombreAptController.clear();
                                            _image=null;
                                             setState(() {
 
@@ -561,6 +572,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd HH:MM').format(now);
 
+
     FormData formData = FormData.fromMap({
       "name": _nombreController.text,
        "dni":  _cedulaController.text ,
@@ -576,15 +588,34 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
       "picture": _image != null
           ? s_archivo.MultipartFile.fromFileSync(_image.path,
               filename: "foto1.png")
-          : null
-    });
+          : null,
 
+    });
+    FormData formDataWithVisitor = FormData.fromMap({
+      "name": _nombreController.text,
+      "dni":  _cedulaController.text ,
+      "phone": _telefononController.text,
+      "checkin": formattedDate,
+      "plate": _placaController.text,
+      "type": _radioGroupValue == "1" ? "singular" : "company",
+      "company": _radioGroupValue == "1" ? "" : _nombreEmController.text,
+      "arl": _radioGroupValue == "1" ? "" : _arlController.text,
+      "eps": _radioGroupValue == "1" ? "" : _epsController.text,
+      "extension_name": _nombreAptController.text,
+      "admin_id": userData.adminId,
+      "picture": _image != null
+          ? s_archivo.MultipartFile.fromFileSync(_image.path,
+          filename: "foto1.png")
+          : null,
+      "visitor_id":visitor.id
+
+    });
     repp.Response response;
     Dio dio = Dio();
     try {
       response = await dio.post(
         solicitudes_http.UrlBase + "/api/visits",
-        data: await formData,
+        data: fotoEncontrada?formDataWithVisitor :  formData,
         options: Options(
           headers: {
             HttpHeaders.contentTypeHeader: "application/json",
@@ -612,9 +643,10 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
             nombreController5: _nombreEmController,
             nombreController6: _arlController,
             nombreController7: _epsController);
-        _buscarApartamentoController.text = "";
+        _nombreAptController.clear();
         newApt = false;
         checkedValue = false;
+        fotoEncontrada=false;
         loads.Toast_Resull(2, "La operación fue procesada con éxito.");
 
         setState(() {});
@@ -646,7 +678,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
 
   @override
   void dispose() {
-    _buscarApartamentoController.dispose();
+
 
     super.dispose();
   }

@@ -118,7 +118,7 @@ class Solicitudes_http {
 
   //Buscar extensiones y administradores
   Future<Map<String, dynamic>> getData_admin(String url1) async {
-    loads = new Loads(context);
+    loads =   Loads(context);
 
     loads.Carga("Buscando...");
     bool conexion = await checkConnection();
@@ -133,7 +133,7 @@ class Solicitudes_http {
         print(resBody);
 
         _re = {"codigo": response.statusCode, "datos": resBody};
-        new Future.delayed(new Duration(seconds: 1), () async {});
+          Future.delayed(  const Duration(seconds: 1), () async {});
       } else if (response.statusCode == 401) {
         _re = {"data": response.statusCode};
       } else {
@@ -162,6 +162,55 @@ class Solicitudes_http {
         HttpHeaders.acceptHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       });
+      if (response.statusCode == 200) {
+        Map<String, dynamic> decodedResp = jsonDecode(response.body);
+        //loads.cerrar();
+        jsonResponse = {
+          "codigo": response.statusCode.toString(),
+          "data": decodedResp["data"]
+        };
+
+        print(decodedResp["data"]);
+      } else if (response.statusCode == 401) {
+        Map<String, dynamic> decodedResp = jsonDecode(response.body);
+        //  loads.cerrar();
+        jsonResponse = {
+          "codigo": response.statusCode.toString(),
+          "data": decodedResp["message"]
+        };
+        sesion_expirada(500.0, context);
+      } else {
+        Map<String, dynamic> decodedResp = jsonDecode(response.body);
+        jsonResponse = {
+          "codigo":"600",
+          "data": decodedResp["message"]
+        };
+
+        print(decodedResp["message"]);
+      }
+    }
+
+    // print(response.statusCode);
+    return jsonResponse;
+  }
+
+  //obtener los datos de un vivitante
+  Future<Map<String, dynamic>> getVisitor({String url1  }) async {
+    var url = "$UrlBase$url1";
+    UserData userData =   UserData();
+    userData = await obtenerDataUser();
+    print(url);
+
+
+    String token = userData?.apiToken;
+    var jsonResponse;
+    var conexion = await checkConnection();
+
+    if (conexion ) {
+      http.Response response = await http.get(Uri.parse(url) , headers: {
+        HttpHeaders.acceptHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      },);
       if (response.statusCode == 200) {
         Map<String, dynamic> decodedResp = jsonDecode(response.body);
         //loads.cerrar();

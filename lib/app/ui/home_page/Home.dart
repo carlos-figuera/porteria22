@@ -98,8 +98,20 @@ class _HomeState extends State<Home> {
                           Expanded(
                             child: Row(
                               children: <Widget>[
-                             
 
+                                Expanded(
+                                    child: GestureDetector(
+                                      child: cardNoti(
+                                          ico:Icons.headset_mic ,
+                                          title: "Novedades",h: screenHeight),
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegistrarNovedadPage()));
+                                      },
+                                    )),
                                 Expanded(
                                     child: GestureDetector(
                                       child: cardNoti(
@@ -128,7 +140,7 @@ class _HomeState extends State<Home> {
                                       },
                                     )),*/
 
-                               Expanded(
+                             /*  Expanded(
                                     child: GestureDetector(
                                       child: cardNoti(
                                           ico:Icons.notification_add ,
@@ -140,23 +152,11 @@ class _HomeState extends State<Home> {
                                             MaterialPageRoute(
                                                 builder: (context) => NotificacionWhatsappPage()));
                                       },
-                                    )),
+                                    )),*/
 
                                
                                Expanded(child: SizedBox())
-                               /* Expanded(
-                                    child: GestureDetector(
-                                      child: cardNoti(
-                                          ico:Icons.headset_mic ,
-                                          title: "Novedades",h: screenHeight),
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegistrarNovedadPage()));
-                                      },
-                                    )),*/
+
                                 
                               ],
                             ),

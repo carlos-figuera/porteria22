@@ -57,8 +57,8 @@ android {
         applicationId "com.phenlinea.porteria"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 27
-        versionName '1.5.9'
+        versionCode 29
+        versionName '1.5.11'
         multiDexEnabled true
 
     }
