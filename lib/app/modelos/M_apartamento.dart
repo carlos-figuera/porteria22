@@ -38,10 +38,10 @@ class MApartameto {
     name: json["name"]??"",
     parkingNumbersStr: json["parking_numbers_str"],
     petsCount: json["pets_count"]??0,
-    plates: json["plates"]??"",
+    plates: json["plate"]??"",
     adminId: json["admin_id"]??0,
     residents: List<Resident>.from(json["residents"].map((x) => Resident.fromJson(x))),
-    visitors: List<Visitor>.from(json["visitors"].map((x) => Visitor.fromJson(x))),
+    visitors: [],
      estado: 1
   );
 

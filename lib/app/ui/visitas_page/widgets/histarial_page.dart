@@ -12,8 +12,6 @@ import 'package:porteria/Util/Solicitudes_http.dart';
 import 'package:porteria/Util/widget_globales.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/src/response.dart' as repp;
-import 'package:dio/src/multipart_file.dart' as s_archivo;
-import 'package:intl/intl.dart';
 
 class HistorialPage extends StatefulWidget {
   const HistorialPage({Key key}) : super(key: key);
@@ -33,7 +31,7 @@ class _HistorialPageState extends State<HistorialPage> {
   void initState() {
     super.initState();
     solicitudes_http = new Solicitudes_http(context);
-    _listVisitas = new List();
+    _listVisitas = [];
     gettData();
   }
 
@@ -188,8 +186,9 @@ String nameAtp({String dni })
                       onChanged: (dato) {
                         if (dato.length > 0) {
                           _listVisitas.forEach((lisau) async {
-                            if (lisau.name.toLowerCase().contains(dato)) {
-                              print(lisau.name);
+                            if (lisau.extension_name.toLowerCase().contains(dato)) {
+                              print("Encontre ${lisau.extension_name}");
+                              lisau.estado = 1;
                             } else {
                               lisau.estado = 0;
                             }
@@ -241,7 +240,7 @@ String nameAtp({String dni })
                           String formattedDate =
                               DateFormat('yyyy-MM-dd HH:MM').format(now);
 
-                          print(_listVisitas[position].picture);
+
                           return _listVisitas[position].estado == 1
                               ? Container(
                                   height: screenHeight * 0.28,
@@ -278,7 +277,7 @@ String nameAtp({String dni })
 
                                                       child: textoItems(
                                                           texto:
-                                                           "APTO :${_listVisitas[position].extension.id==0?"":_listVisitas[position].extension.id }  ${nameAtp(dni:_listVisitas[position].dni )}  "  ,
+                                                           "APTO :${_listVisitas[position].extension_name}"  ,
                                                           tamano: 14,
                                                           colo: Colors.black54)),
                                                   Expanded(
@@ -317,7 +316,7 @@ String nameAtp({String dni })
                                                               "Entrada: ${_listVisitas[position].checkin}",
                                                           tamano: 14,
                                                           colo: Colors.black54)),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 3,
                                                   ),
                                                   Expanded(
@@ -326,7 +325,7 @@ String nameAtp({String dni })
                                                               "Salida : ${_listVisitas[position].checkout}",
                                                           tamano: 14,
                                                           colo: Colors.black54)),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 2,
                                                   ),
                                                 ],

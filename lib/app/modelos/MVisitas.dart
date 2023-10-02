@@ -27,7 +27,8 @@ class MVisitas {
    this.extension,
    this.adminId,
    this.picture,
-   this.estado
+   this.estado,
+    this.extension_name
   });
 
   dynamic id;
@@ -46,8 +47,10 @@ class MVisitas {
   int adminId;
   String picture;
   int estado;
+  String extension_name;
   factory MVisitas.fromJson(Map<String, dynamic> json) => MVisitas(
     id: json["id"]??0,
+    extension_name:json["extension_name"]??"",
     name:  json["name"]??"",
     dni: json["dni"]??"",
     phone: json["phone"]??"",

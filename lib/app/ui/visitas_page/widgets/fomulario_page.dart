@@ -182,24 +182,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
   }
 
 
-  /* Iterable<String> filterClient({
-      String filter,
-    List<String>  data,
-    List<String>  listString,
-  }) {
-    List<String> response = [];
 
-    if (data != null) {
-      data.forEach((element) {
-      //  response.add(element.name);
-      });
-    } else {
-      response = listString ;
-    }
-
-    return response
-        .where((word) => word.toLowerCase().contains(filter.toLowerCase()));
-  }*/
   Widget Containerregistrar() {
     final screenSize = MediaQuery.of(context).size;
     final screenWidth = screenSize.width;
@@ -221,95 +204,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-                        ExcludeSemantics(
-                            child: CheckboxListTile(
-                          title: const Text("Apartamento no Registrado"),
-                          contentPadding: EdgeInsets.all(1),
-                          value: checkedValue,
-                          onChanged: (newValue) {
-                            //_buscarApartamentoController = TextEditingController(text: "");
 
-                            if (mounted) {
-                              setState(() {});
-                              newApt = false;
-
-                              print(" $newApt");
-                              _buscarApartamentoController =
-                                  TextEditingController(text: "");
-
-                              checkedValue = newValue;
-                              if (mounted) {
-                                setState(() {});
-                              }
-                              print(
-                                  'One second has passed.'); // Prints after 1 second.
-
-                            }
-                          },
-                          controlAffinity: ListTileControlAffinity
-                              .trailing, //  <-- leading Checkbox
-                        )),
-
-                       // const SizedBox(height : 15,),
-                        SizedBox(
-                          child: Visibility(
-                            visible: true,
-                            child: SearchField(
-                              suggestions: listaApartamentos,
-                              hint: 'Selecciona un apartamento',
-                              searchStyle: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black.withOpacity(0.8),
-                              ),
-                              validator: (x) {
-                                if (x.length == 0) {
-                                  _curretExtension = null;
-                                  return null;
-                                }
-                                print(x);
-                                /*  if (!listaApartamentos.contains(x) ||
-                                        x.isEmpty) {
-                                      return 'Dato no valido, Selecciona un valor';
-                                    }*/
-
-                                return null;
-                              },
-                              hasOverlay: true,
-                              controller: _buscarApartamentoController,
-                              searchInputDecoration: InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.black.withOpacity(0.8),
-                                    ),
-                                  ),
-                                  border: const OutlineInputBorder(
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                    borderSide: BorderSide(color: Colors.red),
-                                  ),
-                                  suffixIcon: const Icon(Icons.search_sharp)),
-                              maxSuggestionsInViewPort: 10,
-                              itemHeight: 40,
-                              onTap: (x) {
-                                FocusScope.of(context).requestFocus(FocusNode());
-                                print(x);
-
-                                _listApartamentos.forEach((apa) async {
-                                  if (apa.name ==
-                                      _buscarApartamentoController.text) {
-                                    _curretExtension = apa;
-                                  }
-                                });
-                                newApt = true;
-                                checkedValue = false;
-
-                                print(" $newApt");
-
-                                setState(() {});
-                              },
-                            ),
-                          ),
-                        ),
                         const SizedBox(height : 15,),
                         Expanded(
                           child: Row(
@@ -317,7 +212,11 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                               Expanded(
                                 child: Column(
                                   children: [
-
+                                    formularios.campo_Texto(
+                                        currentFocus: _nombreApt,
+                                        nextFocus: _cedula,
+                                        nombreController: _nombreAptController,
+                                        nombre: "Numero de Apartamento "),
 
                                     //dni
                                     formularios.campo_Texto(
@@ -610,12 +509,9 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
                     onPressed: () {
                       Loads loads = new Loads(context);
                       if (_formKey.currentState.validate()) {
-                        if (!newApt && !checkedValue) {
-                          loads.Toast_Resull(1,
-                              "Selecciona una extensión o marca la casilla de  “Apartamento no registrado”  para guardar la visita.  ");
-                        } else {
+
                           registrarVisitas();
-                        }
+
                       }
                     },
                   )),
@@ -667,12 +563,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
 
     FormData formData = FormData.fromMap({
       "name": _nombreController.text,
-       "dni": checkedValue == false
-          ? _cedulaController.text
-          : _cedulaController.text + "#${_buscarApartamentoController.text}",
-
-
-
+       "dni":  _cedulaController.text ,
       "phone": _telefononController.text,
       "checkin": formattedDate,
       "plate": _placaController.text,
@@ -680,7 +571,7 @@ class _FormularioPageVisitaState extends State<FormularioPageVisita> {
       "company": _radioGroupValue == "1" ? "" : _nombreEmController.text,
       "arl": _radioGroupValue == "1" ? "" : _arlController.text,
       "eps": _radioGroupValue == "1" ? "" : _epsController.text,
-      "apartment": checkedValue == false ? _curretExtension.name : "0",
+      "extension_name": _nombreAptController.text,
       "admin_id": userData.adminId,
       "picture": _image != null
           ? s_archivo.MultipartFile.fromFileSync(_image.path,

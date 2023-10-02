@@ -98,19 +98,7 @@ class _HomeState extends State<Home> {
                           Expanded(
                             child: Row(
                               children: <Widget>[
-                                Expanded(
-                                    child: GestureDetector(
-                                      child: cardNoti(
-                                          ico:Icons.headset_mic ,
-                                          title: "Novedades",h: screenHeight),
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegistrarNovedadPage()));
-                                      },
-                                    )),
+                             
 
                                 Expanded(
                                     child: GestureDetector(
@@ -153,6 +141,23 @@ class _HomeState extends State<Home> {
                                                 builder: (context) => NotificacionWhatsappPage()));
                                       },
                                     )),
+
+                               
+                               Expanded(child: SizedBox())
+                               /* Expanded(
+                                    child: GestureDetector(
+                                      child: cardNoti(
+                                          ico:Icons.headset_mic ,
+                                          title: "Novedades",h: screenHeight),
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegistrarNovedadPage()));
+                                      },
+                                    )),*/
+                                
                               ],
                             ),
                             flex: 3,
